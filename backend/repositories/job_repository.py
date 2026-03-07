@@ -1,6 +1,6 @@
 from uuid import UUID
 from typing import List, Any
-from schemas.job import JobCreate
+from schemas.domain import JobCreate
 
 class JobRepository:
     """

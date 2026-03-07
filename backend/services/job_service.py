@@ -1,6 +1,6 @@
 from uuid import UUID
 from repositories.job_repository import JobRepository
-from schemas.job import JobCreate
+from schemas.domain import JobCreate
 
 class JobService:
     """

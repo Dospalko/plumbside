@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from uuid import UUID
 from core.dependencies import get_db, get_current_tenant_id
-from schemas.job import JobCreate, JobResponse
+from schemas.domain import JobCreate, JobResponse
 from services.job_service import JobService
 from repositories.job_repository import JobRepository
 from typing import List
