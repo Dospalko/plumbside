@@ -56,91 +56,113 @@ export default function JobDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl">
-      <div>
+    <div className="flex flex-col gap-6 max-w-5xl w-full mx-auto px-6 py-8 flex-1">
+      <div className="border-b border-slate-200 pb-6">
         <Link href="/dashboard/jobs">
-          <Button variant="ghost" size="sm" className="gap-2 mb-2">
+          <Button variant="ghost" className="gap-2 mb-4 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg h-9 px-3 -ml-3">
             <ArrowLeft className="h-4 w-4" /> Späť na Kanban
           </Button>
         </Link>
-        <h2 className="text-3xl font-bold tracking-tight">{job.title}</h2>
-        <p className="text-muted-foreground mt-1">
-          Vytvorené: {new Date(job.created_at).toLocaleDateString("sk-SK")}
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Detail zákazky</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Status</span>
-              <Badge>{STATUS_LABELS[job.status] || job.status}</Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Naliehavosť</span>
-              <Badge variant={job.urgency === "high" || job.urgency === "critical" ? "destructive" : "secondary"}>
-                {job.urgency}
-              </Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Odhad ceny</span>
-              <span>{job.estimated_price ? `€${job.estimated_price}` : "—"}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Finálna cena</span>
-              <span>{job.final_price ? `€${job.final_price}` : "—"}</span>
-            </div>
-            {job.description && (
-              <div className="pt-2 border-t">
-                <p className="text-muted-foreground mb-1">Popis</p>
-                <p>{job.description}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Zákazník</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            {customer ? (
-              <>
-                <p className="font-medium">{customer.name}</p>
-                <p className="text-muted-foreground">{customer.phone || "—"}</p>
-                <p className="text-muted-foreground">{customer.email || "—"}</p>
-                <p className="text-muted-foreground">{customer.address || "—"}</p>
-              </>
-            ) : (
-              <p className="text-muted-foreground">Zákazník nenájdený.</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Zmeniť status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {STATUSES.map((s) => (
-              <Button
-                key={s}
-                variant={s === job.status ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleStatusChange(s)}
-                disabled={s === job.status}
-              >
-                {STATUS_LABELS[s] || s}
-              </Button>
-            ))}
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900">{job.title}</h2>
+            <p className="text-sm text-slate-500 mt-2">
+              Vytvorené {new Date(job.created_at).toLocaleDateString("sk-SK")}
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <Badge variant="secondary" className="w-fit text-sm px-3 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border-0">
+            {STATUS_LABELS[job.status] || job.status}
+          </Badge>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-6">
+          <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900">
+                Detail zákazky
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 p-5">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <span className="text-slate-500 text-sm font-medium">Naliehavosť</span>
+                <Badge variant={job.urgency === "high" || job.urgency === "critical" ? "destructive" : "secondary"} className="shadow-none">
+                  {job.urgency}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                <span className="text-slate-500 text-sm font-medium">Odhad ceny</span>
+                <span className="font-semibold text-slate-900">{job.estimated_price ? `€${job.estimated_price}` : "—"}</span>
+              </div>
+              <div className="flex justify-between items-center pb-1">
+                <span className="text-slate-500 text-sm font-medium">Finálna cena</span>
+                <span className="font-semibold text-slate-900">{job.final_price ? `€${job.final_price}` : "—"}</span>
+              </div>
+              
+              {job.description && (
+                <div className="pt-4 mt-2 border-t border-slate-100">
+                  <p className="text-slate-500 font-medium text-sm mb-2">Popis problému:</p>
+                  <p className="text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 text-sm">
+                    {job.description}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900">
+                Zákazník
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 p-5">
+              {customer ? (
+                <>
+                  <p className="font-semibold text-slate-900 text-xl">{customer.name}</p>
+                  <div className="space-y-2 text-sm text-slate-600 mt-2">
+                    <p className="flex items-center gap-2"><span className="text-slate-400 w-16">Telefón:</span> {customer.phone || "—"}</p>
+                    <p className="flex items-center gap-2"><span className="text-slate-400 w-16">Email:</span> {customer.email || "—"}</p>
+                    <p className="flex items-center gap-2"><span className="text-slate-400 w-16">Adresa:</span> {customer.address || "—"}</p>
+                  </div>
+                </>
+              ) : (
+                <p className="text-slate-500 italic">Zákazník nenájdený.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900">
+                Posunúť v procese
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-5">
+              <div className="flex flex-col gap-2">
+                {STATUSES.map((s) => (
+                  <Button
+                    key={s}
+                    variant={s === job.status ? "default" : "outline"}
+                    onClick={() => handleStatusChange(s)}
+                    disabled={s === job.status}
+                    className={`justify-start h-10 ${
+                      s === job.status 
+                        ? "bg-blue-600 text-white hover:bg-blue-700" 
+                        : "text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {STATUS_LABELS[s] || s}
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

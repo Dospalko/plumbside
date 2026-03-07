@@ -19,51 +19,58 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r bg-muted/40 px-3 py-4">
-      <div className="mb-8 px-4">
-        <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight">
-          <Wrench className="h-6 w-6 text-primary" />
-          <span>PlumbSide</span>
+    <div className="flex h-full w-64 shrink-0 flex-col bg-transparent px-4 py-6 relative z-0">
+      <div className="mb-10 px-3 flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md shadow-blue-600/20">
+          <Wrench className="h-5 w-5" />
+        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          PlumbSide
         </h1>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1">
+      <nav className="flex flex-1 flex-col gap-1.5">
+        <p className="px-4 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Menu</p>
         {NAV_ITEMS.map((item) => (
           <Link key={item.href} href={item.disabled ? "#" : item.href}>
             <Button
               variant="ghost"
               className={cn(
-                "w-full justify-start gap-3",
-                pathname === item.href && "bg-accent text-accent-foreground",
-                item.disabled && "text-muted-foreground cursor-not-allowed"
+                "w-full justify-start gap-3 h-[42px] px-4 rounded-xl transition-all duration-200 font-medium",
+                pathname === item.href 
+                  ? "bg-white text-blue-700 shadow-sm border border-slate-200/60" 
+                  : "text-slate-600 hover:bg-slate-200/50 hover:text-slate-900",
+                item.disabled && "text-slate-400 hover:text-slate-400 hover:bg-transparent cursor-not-allowed opacity-60"
               )}
             >
-              <item.icon className="h-4 w-4" />
+              <item.icon className={cn("h-[18px] w-[18px]", pathname === item.href ? "text-blue-600" : "text-slate-400")} />
               {item.label}
             </Button>
           </Link>
         ))}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-1">
+      <div className="mt-auto flex flex-col gap-1.5 pt-6">
         <Link href="/dashboard/settings">
           <Button
             variant="ghost"
             className={cn(
-              "w-full justify-start gap-3",
-              pathname === "/dashboard/settings" && "bg-accent text-accent-foreground"
+              "w-full justify-start gap-3 h-[42px] px-4 rounded-xl transition-all duration-200 font-medium",
+              pathname === "/dashboard/settings" 
+                ? "bg-white text-blue-700 shadow-sm border border-slate-200/60" 
+                : "text-slate-600 hover:bg-slate-200/50 hover:text-slate-900"
             )}
           >
-            <Settings className="h-4 w-4" />
+            <Settings className={cn("h-[18px] w-[18px]", pathname === "/dashboard/settings" ? "text-blue-600" : "text-slate-400")} />
             Nastavenia
           </Button>
         </Link>
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-destructive hover:bg-destructive/10 hover:text-destructive"
+          className="w-full justify-start gap-3 h-[42px] px-4 rounded-xl font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
           onClick={logout}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-[18px] w-[18px] text-slate-400" />
           Odhlásiť sa
         </Button>
       </div>

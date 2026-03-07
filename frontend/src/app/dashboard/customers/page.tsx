@@ -7,18 +7,18 @@ import { getCustomers, createCustomer, Customer } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Plus, Search, Users, Phone, Mail, MapPin } from "lucide-react";
 
 export default function CustomersPage() {
   const { token, isAuthenticated } = useAuth();
   const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [search, setSearch] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", email: "", address: "" });
-  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchCustomers = async () => {
     if (!token) return;
@@ -31,121 +31,123 @@ export default function CustomersPage() {
     fetchCustomers();
   }, [token, isAuthenticated]);
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) return;
-    setSaving(true);
+    setLoading(true);
     try {
       await createCustomer(token, form);
       setForm({ name: "", phone: "", email: "", address: "" });
-      setDialogOpen(false);
+      setOpen(false);
       fetchCustomers();
     } catch (err) {
       console.error(err);
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  const filtered = customers.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    (c.phone || "").includes(search) ||
-    (c.email || "").toLowerCase().includes(search.toLowerCase())
+  const filteredCustomers = customers.filter((c) =>
+    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (c.phone || "").includes(searchQuery) ||
+    (c.email || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-8 max-w-6xl mx-auto w-full px-6 py-8 flex-1">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Zákazníci</h2>
-          <p className="text-muted-foreground">Spravuj svoju databázu klientov.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Zákazníci</h2>
+          <p className="text-slate-500 mt-1">Správa vašej klientely.</p>
         </div>
-
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> Pridať zákazníka
+            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm">
+              <Plus className="h-4 w-4" /> Nový zákazník
             </Button>
           </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Nový zákazník</DialogTitle>
+          <DialogContent className="sm:max-w-[500px] rounded-xl border border-slate-200 p-0 overflow-hidden shadow-lg">
+            <DialogHeader className="bg-slate-50 border-b border-slate-100 p-6 pb-4">
+              <DialogTitle className="text-xl font-semibold text-slate-900">Pridať zákazníka</DialogTitle>
+              <DialogDescription className="text-slate-500 mt-1">
+                Vyplňte údaje o novom zákazníkovi.
+              </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={onSubmit} className="space-y-4 p-6 bg-white">
               <div className="space-y-2">
-                <Label htmlFor="c-name">Meno</Label>
-                <Input id="c-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                <Label htmlFor="name" className="text-slate-700 font-medium text-sm">Meno / Firma *</Label>
+                <Input id="name" name="name" required placeholder="Napr. Ján Mrkvička" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="border-slate-300 focus-visible:ring-blue-600 text-slate-900" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="c-phone">Telefón</Label>
-                <Input id="c-phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                <Label htmlFor="email" className="text-slate-700 font-medium text-sm">Email</Label>
+                <Input id="email" name="email" type="email" placeholder="jan@priklad.sk" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="border-slate-300 focus-visible:ring-blue-600 text-slate-900" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="c-email">Email</Label>
-                <Input id="c-email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                <Label htmlFor="phone" className="text-slate-700 font-medium text-sm">Telefón</Label>
+                <Input id="phone" name="phone" placeholder="+421 900 123 456" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="border-slate-300 focus-visible:ring-blue-600 text-slate-900" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="c-address">Adresa</Label>
-                <Input id="c-address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+                <Label htmlFor="address" className="text-slate-700 font-medium text-sm">Adresa</Label>
+                <Input id="address" name="address" placeholder="Hlavná 1, Bratislava" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} className="border-slate-300 focus-visible:ring-blue-600 text-slate-900" />
               </div>
-              <Button type="submit" className="w-full" disabled={saving}>
-                {saving ? "Ukladám..." : "Uložiť"}
-              </Button>
+              <div className="pt-2">
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium" disabled={loading}>
+                  {loading ? "Ukladám..." : "Uložiť zákazníka"}
+                </Button>
+              </div>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Hľadať zákazníkov..."
-            className="pl-8"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Meno</TableHead>
-              <TableHead>Kontakt</TableHead>
-              <TableHead>Adresa</TableHead>
-              <TableHead className="text-right">Pridaný</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                  Žiadni zákazníci.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filtered.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span>{c.phone || "-"}</span>
-                      <span className="text-xs text-muted-foreground">{c.email || "-"}</span>
+      <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden">
+        <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-4">
+          <div className="flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-3 py-2 w-full max-w-md shadow-sm focus-within:ring-1 focus-within:ring-blue-600 focus-within:border-blue-600 transition-all">
+            <Search className="h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Hľadať zákazníka..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border-0 bg-transparent shadow-none focus-visible:ring-0 px-1 py-0 h-auto font-normal text-slate-900 placeholder:text-slate-400 w-full"
+            />
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          {filteredCustomers.length === 0 ? (
+            <div className="p-12 text-center text-slate-500 font-medium">
+              {customers.length === 0 ? "Žiadni zákazníci v systéme." : "Nenašli sa žiadne výsledky."}
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-100">
+              {filteredCustomers.map((customer) => (
+                <div key={customer.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 hover:bg-slate-50 transition-colors gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                      <Users className="h-5 w-5" />
                     </div>
-                  </TableCell>
-                  <TableCell>{c.address || "-"}</TableCell>
-                  <TableCell className="text-right text-sm text-muted-foreground">
-                    {new Date(c.created_at).toLocaleDateString("sk-SK")}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                    <div>
+                      <p className="text-lg font-semibold text-slate-900">{customer.name}</p>
+                      <div className="flex flex-wrap items-center gap-4 mt-1 text-sm text-slate-500">
+                        {customer.phone && (
+                          <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{customer.phone}</span>
+                        )}
+                        {customer.email && (
+                          <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{customer.email}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  {customer.address && (
+                    <div className="text-sm text-slate-500 sm:text-right flex items-center sm:justify-end gap-1.5">
+                      <MapPin className="h-3.5 w-3.5" />{customer.address}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
