@@ -1,12 +1,12 @@
 import asyncio
 from uuid import uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.database import SessionLocal, engine
+from core.database import AsyncSessionLocal, engine
 from models.domain import Tenant, User, Customer, Job, UserRole, JobStatus, JobUrgency
 from core.security import get_password_hash
 
 async def seed_db():
-    async with SessionLocal() as db:
+    async with AsyncSessionLocal() as db:
         # Create a Demo Tenant
         tenant_id = uuid4()
         demo_tenant = Tenant(id=tenant_id, name="PlumbSide Demo Corp")

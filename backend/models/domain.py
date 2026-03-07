@@ -1,10 +1,11 @@
 import enum
+import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Text, ForeignKey, Enum, Float
-from uuid import UUID
+from sqlalchemy import String, Text, ForeignKey, Enum, Float, DateTime, func
+from uuid import UUID, uuid4
 from typing import List
 
-from .base import TenantAwareModel
+from .base import Base, TenantAwareModel
 
 class JobStatus(str, enum.Enum):
     NEW = "new"
@@ -21,9 +22,17 @@ class JobUrgency(str, enum.Enum):
     HIGH = "high"
     CRITICAL = "critical"
 
-class Tenant(TenantAwareModel):
+class Tenant(Base):
     __tablename__ = "tenants"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String, nullable=False)
+    
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    updated_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
     
     users: Mapped[List["User"]] = relationship(back_populates="tenant")
     customers: Mapped[List["Customer"]] = relationship(back_populates="tenant")
