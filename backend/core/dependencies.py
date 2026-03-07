@@ -1,10 +1,7 @@
 from fastapi import Header, HTTPException
 from uuid import UUID
 
-async def get_db():
-    # Placeholder for async SQLAlchemy session generation
-    # e.g., async with async_session_maker() as session: yield session
-    yield "mock_db_session"
+from core.database import get_db
 
 async def get_current_tenant_id(x_tenant_id: UUID = Header(None, alias="X-Tenant-ID")) -> UUID:
     """
