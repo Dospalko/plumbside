@@ -4,6 +4,7 @@ FROM python:3.12-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PATH="$PATH:/home/appuser/.local/bin"
 
 # Set work directory
 WORKDIR /app
@@ -35,4 +36,4 @@ EXPOSE 8000
 # Command to run API servers. 
 # Migrations should typically be run before server start in a startup script, 
 # but for MVP local dev, we start the server directly.
-CMD ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

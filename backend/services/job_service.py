@@ -1,19 +1,32 @@
 from uuid import UUID
+from typing import List, Optional
+
+from sqlalchemy.ext.asyncio import AsyncSession
 from repositories.job_repository import JobRepository
-from schemas.domain import JobCreate
+from schemas.domain import JobCreate, JobUpdate, JobResponse
 
 class JobService:
-    """
-    Business logic layer for Jobs.
-    Coordinates between repositories, AI workers, and external services.
-    """
-    def __init__(self, job_repo: JobRepository):
-        self.job_repo = job_repo
+    def __init__(self, db: AsyncSession):
+        self.repo = JobRepository(db)
 
-    async def list_tenant_jobs(self, tenant_id: UUID):
-        # Additional business rules can be applied here before returning data
-        return await self.job_repo.list_jobs(tenant_id=tenant_id)
+    async def list_jobs(self, tenant_id: UUID) -> List[JobResponse]:
+        jobs = await self.repo.get_all(tenant_id)
+        return [JobResponse.model_validate(j) for j in jobs]
 
-    async def create_job(self, tenant_id: UUID, job_in: JobCreate):
-        # e.g., trigger notifications, validate customer existence
-        return await self.job_repo.create_job(tenant_id, job_in)
+    async def get_job(self, job_id: UUID, tenant_id: UUID) -> Optional[JobResponse]:
+        job = await self.repo.get_by_id(job_id, tenant_id)
+        if job:
+            return JobResponse.model_validate(job)
+        return None
+
+    async def create_job(self, tenant_id: UUID, job_in: JobCreate) -> Optional[JobResponse]:
+        job = await self.repo.create(tenant_id, job_in)
+        if job:
+            return JobResponse.model_validate(job)
+        return None
+        
+    async def update_job(self, job_id: UUID, tenant_id: UUID, job_in: JobUpdate) -> Optional[JobResponse]:
+        job = await self.repo.update(job_id, tenant_id, job_in)
+        if job:
+             return JobResponse.model_validate(job)
+        return None
