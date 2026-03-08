@@ -53,6 +53,37 @@ export async function login(email: string, password: string): Promise<TokenRespo
   return res.json();
 }
 
+// --- Users & Tenants ---
+export interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  role: string;
+  created_at: string;
+}
+
+export interface TenantProfile {
+  id: string;
+  name: string;
+  created_at: string;
+}
+
+export function getUser(token: string) {
+  return api<UserProfile>("/api/v1/users/me", { token });
+}
+
+export function updateUser(token: string, data: { full_name?: string; email?: string; password?: string }) {
+  return api<UserProfile>("/api/v1/users/me", { method: "PATCH", token, body: JSON.stringify(data) });
+}
+
+export function getTenant(token: string) {
+  return api<TenantProfile>("/api/v1/tenants/me", { token });
+}
+
+export function updateTenant(token: string, data: { name: string }) {
+  return api<TenantProfile>("/api/v1/tenants/me", { method: "PATCH", token, body: JSON.stringify(data) });
+}
+
 // --- Jobs ---
 export interface Message {
   id: string;

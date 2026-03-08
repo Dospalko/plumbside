@@ -14,7 +14,7 @@ class JobRepository:
     async def get_all(self, tenant_id: UUID) -> List[Job]:
         """Fetch all jobs belonging to the tenant."""
         # Note: We enforce tenant isolation here directly on the Job entity
-        query = select(Job).options(selectinload(Job.appointments)).where(Job.tenant_id == tenant_id).order_by(Job.created_at.desc())
+        query = select(Job).options(selectinload(Job.appointments), selectinload(Job.messages)).where(Job.tenant_id == tenant_id).order_by(Job.created_at.desc())
         result = await self.db.execute(query)
         return list(result.scalars().all())
 

@@ -39,6 +39,9 @@ class AuditResponse(BaseModel):
 class TenantResponse(AuditResponse):
     name: str
 
+class TenantUpdate(BaseModel):
+    name: Optional[str] = None
+
 # -----------------
 # USERS
 # -----------------
@@ -46,6 +49,11 @@ class UserBase(BaseModel):
     email: EmailStr
     full_name: str
     role: UserRole = UserRole.TECHNICIAN
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
 
 class UserResponse(UserBase, AuditResponse):
     pass
@@ -124,6 +132,8 @@ class JobCreate(JobBase):
     pass
 
 class JobUpdate(BaseModel):
+    title: Optional[str] = None
+    urgency: Optional[JobUrgency] = None
     status: Optional[JobStatus] = None
     estimated_price: Optional[float] = None
     final_price: Optional[float] = None

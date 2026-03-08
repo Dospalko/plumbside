@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter, useParams } from "next/navigation";
 import { getJob, patchJob, getCustomers, Job, Customer, createMessage, createAppointment } from "@/lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Clock, MessageSquare, Send, Calendar } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro } from "lucide-react";
 import Link from "next/link";
 
 const STATUSES = ["new", "quoted", "scheduled", "in_progress", "done", "cancelled"];
@@ -33,6 +33,20 @@ export default function JobDetailPage() {
   const [appointmentDate, setAppointmentDate] = useState("");
   const [isSubmittingMessage, setIsSubmittingMessage] = useState(false);
   const [isSubmittingAppt, setIsSubmittingAppt] = useState(false);
+
+  // Edit states
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  
+  const [isEditingDesc, setIsEditingDesc] = useState(false);
+  const [editDesc, setEditDesc] = useState("");
+  
+  const [isEditingPrice, setIsEditingPrice] = useState(false);
+  const [editEstPrice, setEditEstPrice] = useState("");
+  const [editFinalPrice, setEditFinalPrice] = useState("");
+  
+  const [isEditingUrgency, setIsEditingUrgency] = useState(false);
+  const [editUrgency, setEditUrgency] = useState("");
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -60,6 +74,38 @@ export default function JobDetailPage() {
     // Keep existing messages/appointments from local state since patchJob might not return them eager loaded based on backend config, or just reload job.
     const reloaded = await getJob(token, job.id);
     setJob(reloaded);
+  };
+
+  const handleUpdateDetails = async (type: 'desc' | 'price' | 'title' | 'urgency') => {
+    if (!token || !job) return;
+    
+    let updateData = {};
+    if (type === 'desc') {
+      updateData = { description: editDesc };
+    } else if (type === 'price') {
+      updateData = { 
+        estimated_price: editEstPrice ? parseFloat(editEstPrice) : null,
+        final_price: editFinalPrice ? parseFloat(editFinalPrice) : null
+      };
+    } else if (type === 'title') {
+      updateData = { title: editTitle };
+    } else if (type === 'urgency') {
+      updateData = { urgency: editUrgency };
+    }
+
+    try {
+      await patchJob(token, job.id, updateData);
+      const reloaded = await getJob(token, job.id);
+      setJob(reloaded);
+      
+      if (type === 'desc') setIsEditingDesc(false);
+      if (type === 'price') setIsEditingPrice(false);
+      if (type === 'title') setIsEditingTitle(false);
+      if (type === 'urgency') setIsEditingUrgency(false);
+    } catch (err) {
+      console.error(err);
+      alert("Chyba pri ukladaní.");
+    }
   };
 
   const handleAddMessage = async (e: React.FormEvent) => {
@@ -103,8 +149,34 @@ export default function JobDetailPage() {
               <ArrowLeft className="h-4 w-4" /> Späť na Kanban
             </Button>
           </Link>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">{job.title}</h2>
-          <p className="text-sm text-slate-500 mt-2">
+          
+          <div className="group relative pr-10">
+            {isEditingTitle ? (
+              <div className="flex items-center gap-2 mb-2">
+                <Input 
+                  value={editTitle} 
+                  onChange={e => setEditTitle(e.target.value)} 
+                  className="text-2xl font-bold h-12 w-full max-w-md bg-white border-blue-200 outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                  autoFocus
+                />
+                <Button size="icon" variant="ghost" className="text-red-500 hover:bg-red-50" onClick={() => setIsEditingTitle(false)}><X className="h-4 w-4"/></Button>
+                <Button size="icon" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" onClick={() => handleUpdateDetails('title')}><Check className="h-4 w-4"/></Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900">{job.title}</h2>
+                <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-blue-600 hover:bg-blue-50" onClick={() => {
+                  setEditTitle(job.title);
+                  setIsEditingTitle(true);
+                }}>
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+          
+          <p className="text-sm text-slate-500 mt-1 flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-slate-200"></span>
             Vytvorené {new Date(job.created_at).toLocaleDateString("sk-SK")}
           </p>
         </div>
@@ -119,34 +191,142 @@ export default function JobDetailPage() {
         {/* Main Content Column */}
         <div className="space-y-6">
           <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5">
+            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5 flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold text-slate-900 tracking-tight">
                 Detail problému
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 p-5">
-              <div className="flex gap-4 mb-2">
-                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100">
-                  <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">Naliehavosť</span>
-                  <Badge variant={job.urgency === "high" || job.urgency === "critical" ? "destructive" : "secondary"} className="shadow-none rounded-md px-2 py-0.5">
-                    {job.urgency}
-                  </Badge>
+              
+              {/* Urgency & Prices */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-2">
+                
+                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 group relative">
+                  <div className="flex justify-between items-start">
+                    <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Naliehavosť</span>
+                    {!isEditingUrgency && (
+                      <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 text-slate-400 hover:text-blue-600 bg-white shadow-sm border border-slate-100" onClick={() => {
+                        setEditUrgency(job.urgency);
+                        setIsEditingUrgency(true);
+                      }}>
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {isEditingUrgency ? (
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {["low", "normal", "high", "critical"].map((u) => (
+                        <Badge 
+                          key={u}
+                          variant="outline"
+                          className={`cursor-pointer transition-colors px-3 py-1 text-xs ${
+                            editUrgency === u 
+                              ? "bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200" 
+                              : "bg-white hover:bg-slate-100 border-slate-200 text-slate-600"
+                          }`}
+                          onClick={() => setEditUrgency(u)}
+                        >
+                          {u}
+                        </Badge>
+                      ))}
+                      <div className="flex w-full justify-end gap-1 mt-2 border-t border-slate-200 pt-2">
+                         <Button size="icon" variant="ghost" className="h-7 w-7 text-red-500 hover:bg-red-50" onClick={() => setIsEditingUrgency(false)}><X className="h-3.5 w-3.5"/></Button>
+                         <Button size="icon" className="h-7 w-7 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => handleUpdateDetails('urgency')}><Check className="h-3.5 w-3.5"/></Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Badge 
+                      variant={(job.urgency === "high" || job.urgency === "critical") ? "destructive" : "secondary"} 
+                      className={`shadow-none rounded-md px-2.5 py-1 font-medium ${
+                        job.urgency === 'low' ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' :
+                        job.urgency === 'normal' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' :
+                        job.urgency === 'high' ? 'bg-orange-100 text-orange-800 hover:bg-orange-200' :
+                        'bg-red-100 text-red-800 hover:bg-red-200'
+                      }`}
+                    >
+                      {job.urgency === "low" ? "Nízka" :
+                       job.urgency === "normal" ? "Normálna" :
+                       job.urgency === "high" ? "Vysoká" : "Kritická"}
+                    </Badge>
+                  )}
                 </div>
-                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100">
-                  <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">Cena (Odhad)</span>
-                  <span className="font-semibold text-slate-900">{job.estimated_price ? `€${job.estimated_price}` : "—"}</span>
+
+                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 group relative">
+                  <div className="flex justify-between items-start">
+                    <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Cena</span>
+                    {!isEditingPrice && (
+                      <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 text-slate-400 hover:text-blue-600 bg-white shadow-sm border border-slate-100" onClick={() => {
+                        setEditEstPrice(job.estimated_price?.toString() || "");
+                        setEditFinalPrice(job.final_price?.toString() || "");
+                        setIsEditingPrice(true);
+                      }}>
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {isEditingPrice ? (
+                    <div className="space-y-2 mt-2">
+                       <div className="flex items-center gap-2">
+                         <span className="text-xs text-slate-500 w-12">Odhad:</span>
+                         <Input type="number" value={editEstPrice} onChange={e => setEditEstPrice(e.target.value)} placeholder="0.00" className="h-7 text-sm" />
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <span className="text-xs text-slate-500 w-12">Finálna:</span>
+                         <Input type="number" value={editFinalPrice} onChange={e => setEditFinalPrice(e.target.value)} placeholder="0.00" className="h-7 text-sm" />
+                       </div>
+                       <div className="flex justify-end gap-1 mt-3 border-t border-slate-200 pt-2">
+                         <Button size="icon" variant="ghost" className="h-7 w-7 text-red-500 hover:bg-red-50" onClick={() => setIsEditingPrice(false)}><X className="h-3.5 w-3.5"/></Button>
+                         <Button size="icon" className="h-7 w-7 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => handleUpdateDetails('price')}><Check className="h-3.5 w-3.5"/></Button>
+                       </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm">Odhad: <span className="font-semibold text-slate-900">{job.estimated_price ? `${job.estimated_price} €` : "—"}</span></span>
+                      <span className="text-sm">Finálna: <span className="font-semibold text-green-600 border-b border-green-200">{job.final_price ? `${job.final_price} €` : "—"}</span></span>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              {job.description ? (
-                <div className="pt-2">
-                  <p className="text-slate-700 leading-relaxed text-sm">
-                    {job.description}
-                  </p>
+              {/* Description */}
+              <div className="pt-2 group relative">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="text-sm font-semibold text-slate-700">Popis zákazky</h4>
+                  {!isEditingDesc && (
+                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-blue-600 bg-white border border-slate-100 shadow-sm rounded-lg" onClick={() => {
+                      setEditDesc(job.description || "");
+                      setIsEditingDesc(true);
+                    }}>
+                      <Edit2 className="h-3 w-3 mr-1.5" /> Upraviť
+                    </Button>
+                  )}
                 </div>
-              ) : (
-                <p className="text-slate-400 text-sm italic py-2">Bez bližšieho popisu.</p>
-              )}
+
+                {isEditingDesc ? (
+                  <div className="space-y-2">
+                    <Textarea 
+                      value={editDesc} 
+                      onChange={e => setEditDesc(e.target.value)} 
+                      rows={4}
+                      className="text-sm bg-slate-50 border-slate-200"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 border border-slate-200 bg-white h-8" onClick={() => setIsEditingDesc(false)}>Zrušiť</Button>
+                      <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm h-8 px-4" onClick={() => handleUpdateDetails('desc')}>Uložiť</Button>
+                    </div>
+                  </div>
+                ) : (
+                  job.description ? (
+                    <p className="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                      {job.description}
+                    </p>
+                  ) : (
+                    <p className="text-slate-400 text-sm italic py-2">Bez bližšieho popisu.</p>
+                  )
+                )}
+              </div>
             </CardContent>
           </Card>
 

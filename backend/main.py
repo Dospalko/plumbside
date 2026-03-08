@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers.v1 import jobs, auth, customers
+from routers.v1 import jobs, auth, customers, users, tenants
 from core.config import settings
 
 app = FastAPI(
@@ -12,7 +12,10 @@ app = FastAPI(
 # CORS setup for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allow all for local dev
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,6 +23,8 @@ app.add_middleware(
 
 # Include API routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(tenants.router, prefix="/api/v1/tenants", tags=["Tenants"])
 app.include_router(customers.router, prefix="/api/v1/customers", tags=["Customers"])
 app.include_router(jobs.router, prefix="/api/v1/jobs", tags=["Jobs"])
 

@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Bricolage_Grotesque, Space_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const outfit = Outfit({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-heading",
+});
+
+const mono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sk" className={`${inter.variable} ${outfit.variable}`}>
-      <body className="font-sans antialiased text-slate-900 bg-slate-50 relative">
-        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:20px_20px] opacity-60 z-[-1]" />
+    <html lang="sk" className={`${mono.variable} ${bricolage.variable}`}>
+      <body className="font-sans antialiased text-slate-900 bg-[#FAF9F6] selection:bg-orange-500 selection:text-white relative min-h-screen">
         <Providers>{children}</Providers>
       </body>
     </html>
