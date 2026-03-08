@@ -54,6 +54,28 @@ export async function login(email: string, password: string): Promise<TokenRespo
 }
 
 // --- Jobs ---
+export interface Message {
+  id: string;
+  tenant_id: string;
+  job_id: string;
+  channel: string;
+  direction: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Appointment {
+  id: string;
+  tenant_id: string;
+  job_id: string;
+  technician_id: string | null;
+  scheduled_time: string;
+  duration_minutes: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Job {
   id: string;
   tenant_id: string;
@@ -66,6 +88,8 @@ export interface Job {
   final_price: number | null;
   created_at: string;
   updated_at: string;
+  messages?: Message[];
+  appointments?: Appointment[];
 }
 
 export function getJobs(token: string) {
@@ -90,6 +114,22 @@ export function patchJob(token: string, jobId: string, data: Partial<Job>) {
   return api<Job>(`/api/v1/jobs/${jobId}`, { method: "PATCH", token, body: JSON.stringify(data) });
 }
 
+export function createMessage(token: string, jobId: string, data: { channel?: string; direction?: string; content: string }) {
+  return api<Message>(`/api/v1/jobs/${jobId}/messages`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ job_id: jobId, ...data }),
+  });
+}
+
+export function createAppointment(token: string, jobId: string, data: { scheduled_time: string; duration_minutes?: number; technician_id?: string }) {
+  return api<Appointment>(`/api/v1/jobs/${jobId}/appointments`, {
+    method: "POST",
+    token,
+    body: JSON.stringify({ job_id: jobId, ...data }),
+  });
+}
+
 // --- Customers ---
 export interface Customer {
   id: string;
@@ -109,4 +149,35 @@ export function getCustomers(token: string) {
 
 export function createCustomer(token: string, data: { name: string; phone?: string; email?: string; address?: string }) {
   return api<Customer>("/api/v1/customers", { method: "POST", token, body: JSON.stringify(data) });
+}
+
+// --- AI Intake ---
+export interface JobDraftExtraction {
+  customer_name?: string | null;
+  customer_phone?: string | null;
+  customer_address?: string | null;
+  job_title: string;
+  job_description?: string | null;
+  job_urgency: "low" | "normal" | "high" | "critical";
+}
+
+export async function aiIntake(token: string, text?: string, file?: File): Promise<JobDraftExtraction> {
+  const formData = new FormData();
+  if (text) formData.append("text", text);
+  if (file) formData.append("file", file);
+
+  const res = await fetch(`${API_BASE}/api/v1/jobs/ai-intake`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new ApiError(errorBody.detail || "AI vyhodnotenie zlyhalo", res.status);
+  }
+
+  return res.json();
 }

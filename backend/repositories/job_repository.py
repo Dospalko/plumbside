@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.orm import selectinload
 from typing import List, Optional
 from uuid import UUID
 
@@ -13,13 +14,16 @@ class JobRepository:
     async def get_all(self, tenant_id: UUID) -> List[Job]:
         """Fetch all jobs belonging to the tenant."""
         # Note: We enforce tenant isolation here directly on the Job entity
-        query = select(Job).where(Job.tenant_id == tenant_id).order_by(Job.created_at.desc())
+        query = select(Job).options(selectinload(Job.appointments)).where(Job.tenant_id == tenant_id).order_by(Job.created_at.desc())
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
     async def get_by_id(self, job_id: UUID, tenant_id: UUID) -> Optional[Job]:
         """Fetch a specific job safely isolated to the tenant."""
-        query = select(Job).where(Job.id == job_id, Job.tenant_id == tenant_id)
+        query = select(Job).options(
+            selectinload(Job.messages),
+            selectinload(Job.appointments)
+        ).where(Job.id == job_id, Job.tenant_id == tenant_id)
         result = await self.db.execute(query)
         return result.scalar_one_or_none()
 

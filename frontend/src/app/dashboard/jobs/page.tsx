@@ -4,33 +4,33 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { getJobs, patchJob, Job } from "@/lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CreateJobSheet } from "@/components/jobs/CreateJobSheet";
-import { Calendar } from "lucide-react";
+import { Calendar, Clock, AlertCircle } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 
 const COLUMNS = [
-  { key: "new", label: "Nové", color: "bg-white border-black text-black" },
-  { key: "quoted", label: "Nacenené", color: "bg-yellow-400 border-black text-black" },
-  { key: "scheduled", label: "Naplánované", color: "bg-purple-400 border-black text-black" },
-  { key: "in_progress", label: "Prebieha", color: "bg-[#FF3E00] border-black text-black" },
-  { key: "done", label: "Hotové", color: "bg-black border-black text-white" },
+  { key: "new", label: "Nové", color: "bg-blue-600", dot: "bg-blue-500", txt: "text-blue-700", bg: "bg-blue-50/50" },
+  { key: "quoted", label: "Nacenené", color: "bg-amber-500", dot: "bg-amber-400", txt: "text-amber-700", bg: "bg-amber-50/50" },
+  { key: "scheduled", label: "Naplánované", color: "bg-purple-500", dot: "bg-purple-400", txt: "text-purple-700", bg: "bg-purple-50/50" },
+  { key: "in_progress", label: "Prebieha", color: "bg-indigo-500", dot: "bg-indigo-400", txt: "text-indigo-700", bg: "bg-indigo-50/50" },
+  { key: "done", label: "Hotové", color: "bg-emerald-500", dot: "bg-emerald-400", txt: "text-emerald-700", bg: "bg-emerald-50/50" },
 ];
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
 };
 
 const columnVariants: Variants = {
-  hidden: { opacity: 0, x: -20 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.4, type: "spring", stiffness: 200 } }
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, type: "spring", stiffness: 250 } }
 };
 
 export default function JobsPage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, isLoaded } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,18 +48,22 @@ export default function JobsPage() {
   };
 
   useEffect(() => {
+    if (!isLoaded) return;
     if (!isAuthenticated) { router.push("/login"); return; }
     fetchJobs();
-  }, [token, isAuthenticated, router]);
+  }, [token, isAuthenticated, isLoaded, router]);
 
   const moveJob = async (e: React.MouseEvent, jobId: string, newStatus: string) => {
     e.stopPropagation();
     if (!token) return;
     try {
+      // Optimistic update
+      setJobs(prev => prev.map(j => j.id === jobId ? { ...j, status: newStatus } : j));
       await patchJob(token, jobId, { status: newStatus });
       fetchJobs();
     } catch (err) {
       console.error(err);
+      fetchJobs(); // revert on fail
     }
   };
 
@@ -68,67 +72,78 @@ export default function JobsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-[1600px] mx-auto px-6 py-6 flex-1 min-h-0">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="flex flex-col w-full h-full px-4 py-6 md:px-6 md:py-6 overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 shrink-0">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Zákazky</h2>
-          <p className="text-slate-500 mt-1">Kanban systém pre rýchlu správu.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Zákazky</h2>
+          <p className="text-sm text-slate-500 mt-0.5">Potiahni alebo klikni na zákazku pre detaily.</p>
         </div>
         <CreateJobSheet onCreated={fetchJobs} />
       </div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="show" className="flex overflow-x-auto pb-4 gap-4 snap-x flex-1 mt-2 min-h-0">
+      <motion.div 
+        variants={containerVariants} 
+        initial="hidden" 
+        animate="show" 
+        className="flex overflow-x-auto overflow-y-hidden gap-3 lg:gap-4 pb-2 snap-x flex-1 min-h-0 w-full"
+      >
         {COLUMNS.map((col) => {
           const colJobs = jobs.filter((j) => j.status === col.key);
           
-          let colColors = "bg-slate-100 text-slate-700";
-          if (col.key === "new") colColors = "bg-blue-50 text-blue-700 border border-blue-100";
-          if (col.key === "quoted") colColors = "bg-yellow-50 text-yellow-700 border border-yellow-100";
-          if (col.key === "scheduled") colColors = "bg-purple-50 text-purple-700 border border-purple-100";
-          if (col.key === "in_progress") colColors = "bg-orange-50 text-orange-700 border border-orange-100";
-          if (col.key === "done") colColors = "bg-green-50 text-green-700 border border-green-100";
-
           return (
-            <motion.div key={col.key} variants={columnVariants} className="flex-1 min-w-[320px] max-w-[400px] snap-center flex flex-col gap-3">
-              <div className={`px-4 py-3 rounded-xl font-semibold flex items-center justify-between shadow-sm ${colColors}`}>
-                <span>{col.label}</span>
-                <Badge variant="outline" className="bg-white/60 border-current/20 text-current">{colJobs.length}</Badge>
+            <motion.div 
+              key={col.key} 
+              variants={columnVariants} 
+              className={`flex-1 min-w-[260px] max-w-[340px] snap-center flex flex-col rounded-2xl ${col.bg} border-t-4 border-t-transparent hover:border-t-${col.color.replace('bg-', '')} transition-colors duration-300 relative`}
+            >
+              {/* Top Accent Line */}
+              <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${col.color} opacity-80`} />
+              
+              <div className="px-4 py-3.5 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${col.dot}`} />
+                  <span className={`font-semibold tracking-tight text-sm ${col.txt}`}>{col.label}</span>
+                </div>
+                <Badge variant="secondary" className="bg-white/60 text-slate-700 shadow-sm border-0 font-medium px-2 py-0">
+                  {colJobs.length}
+                </Badge>
               </div>
 
-              <div className="flex flex-col gap-3 overflow-y-auto pb-2 min-h-0">
+              <div className="flex flex-col gap-2.5 px-2 pb-3 overflow-y-auto flex-1 min-h-0 custom-scrollbar">
                 {colJobs.map((job) => (
-                  <Card key={job.id} onClick={() => router.push(`/dashboard/jobs/${job.id}`)} className="rounded-xl border border-slate-200/60 shadow-sm bg-white cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group flex flex-col shrink-0">
-                    <CardHeader className="p-4 pb-2 border-b-0">
-                      <CardTitle className="text-base font-semibold text-slate-900 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
-                        {job.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-2 flex flex-col gap-3">
-                      {job.description && (
-                        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
-                          {job.description}
-                        </p>
-                      )}
-                      <div className="flex items-center justify-between gap-2 mt-1">
-                        <Badge variant={job.urgency === "high" || job.urgency === "critical" ? "destructive" : "secondary"} className="shadow-none text-[10px] font-medium px-2 py-0.5">
+                  <Card 
+                    key={job.id} 
+                    onClick={() => router.push(`/dashboard/jobs/${job.id}`)} 
+                    className="rounded-xl border-transparent shadow-[0_1px_3px_rgb(0,0,0,0.05),0_1px_2px_rgb(0,0,0,0.02)] bg-white cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all group shrink-0"
+                  >
+                    <CardContent className="p-3.5 flex flex-col gap-2.5">
+                      <div className="flex justify-between items-start gap-2">
+                        <h4 className="text-[13px] font-semibold text-slate-800 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
+                          {job.title}
+                        </h4>
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-2 mt-auto">
+                        <Badge variant={job.urgency === "high" || job.urgency === "critical" ? "destructive" : "secondary"} className="shadow-none text-[9px] font-medium px-1.5 py-0 uppercase tracking-wide">
                           {job.urgency}
                         </Badge>
-                        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                        <div className="flex items-center gap-1 text-[11px] text-slate-400 font-medium ml-auto">
                           <Calendar className="h-3 w-3" />
-                          {new Date(job.created_at).toLocaleDateString("sk-SK")}
+                          {new Date(job.created_at).toLocaleDateString("sk-SK", { day: 'numeric', month: 'short' })}
                         </div>
                       </div>
 
-                      <div className="flex gap-2 pt-3 border-t border-slate-100 mt-1">
+                      {/* Quick Move Buttons (Visible on hover or mobile) */}
+                      <div className="flex gap-1.5 pt-2.5 border-t border-slate-50 mt-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
                         {COLUMNS.filter((c) => c.key !== col.key).slice(0, 2).map((target) => (
                           <Button
                             key={target.key}
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
-                            className="flex-1 h-8 text-xs text-slate-600 border-slate-200 hover:bg-slate-50"
+                            className="flex-1 h-7 text-[10px] bg-slate-50 text-slate-600 hover:bg-slate-100 px-1"
                             onClick={(e) => moveJob(e, job.id, target.key)}
                           >
-                            → {target.label}
+                            <span className="truncate">→ {target.label}</span>
                           </Button>
                         ))}
                       </div>

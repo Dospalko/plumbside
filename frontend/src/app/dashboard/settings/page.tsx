@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -5,6 +10,16 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
+  const { isAuthenticated, isLoaded } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (!isAuthenticated) { router.push("/login"); return; }
+  }, [isLoaded, isAuthenticated, router]);
+
+  if (!isLoaded || !isAuthenticated) return null;
+
   return (
     <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full px-4 pb-12">
       <div>

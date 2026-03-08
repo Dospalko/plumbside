@@ -70,6 +70,46 @@ class CustomerResponse(CustomerBase, AuditResponse):
     pass
 
 # -----------------
+# MESSAGES
+# -----------------
+class MessageChannel(str, enum.Enum):
+    SMS = "sms"
+    EMAIL = "email"
+    WHATSAPP = "whatsapp"
+    SYSTEM = "system"
+
+class MessageDirection(str, enum.Enum):
+    INBOUND = "inbound"
+    OUTBOUND = "outbound"
+
+class MessageBase(BaseModel):
+    job_id: UUID
+    channel: MessageChannel = MessageChannel.SYSTEM
+    direction: MessageDirection = MessageDirection.OUTBOUND
+    content: str
+
+class MessageCreate(MessageBase):
+    pass
+
+class MessageResponse(MessageBase, AuditResponse):
+    pass
+
+# -----------------
+# APPOINTMENTS
+# -----------------
+class AppointmentBase(BaseModel):
+    job_id: UUID
+    technician_id: Optional[UUID] = None
+    scheduled_time: str # ISO Format
+    duration_minutes: Optional[int] = 60
+
+class AppointmentCreate(AppointmentBase):
+    pass
+
+class AppointmentResponse(AppointmentBase, AuditResponse):
+    pass
+
+# -----------------
 # JOBS
 # -----------------
 class JobBase(BaseModel):
@@ -91,18 +131,6 @@ class JobUpdate(BaseModel):
 
 class JobResponse(JobBase, AuditResponse):
     final_price: Optional[float] = None
+    messages: List[MessageResponse] = []
+    appointments: List[AppointmentResponse] = []
 
-# -----------------
-# APPOINTMENTS
-# -----------------
-class AppointmentBase(BaseModel):
-    job_id: UUID
-    technician_id: Optional[UUID] = None
-    scheduled_time: str # ISO Format
-    duration_minutes: Optional[int] = 60
-
-class AppointmentCreate(AppointmentBase):
-    pass
-
-class AppointmentResponse(AppointmentBase, AuditResponse):
-    pass

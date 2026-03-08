@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Plus, Search, Users, Phone, Mail, MapPin } from "lucide-react";
 
 export default function CustomersPage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, isLoaded } = useAuth();
   const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,9 +27,10 @@ export default function CustomersPage() {
   };
 
   useEffect(() => {
+    if (!isLoaded) return;
     if (!isAuthenticated) { router.push("/login"); return; }
     fetchCustomers();
-  }, [token, isAuthenticated]);
+  }, [token, isAuthenticated, isLoaded, router]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

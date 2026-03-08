@@ -25,12 +25,13 @@ const item: Variants = {
 };
 
 export default function DashboardPage() {
-  const { token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, isLoaded } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
+    if (!isLoaded) return;
     if (!isAuthenticated) {
       router.push("/login");
       return;
@@ -39,7 +40,7 @@ export default function DashboardPage() {
       getJobs(token).then(setJobs).catch(console.error);
       getCustomers(token).then(setCustomers).catch(console.error);
     }
-  }, [token, isAuthenticated, router]);
+  }, [token, isAuthenticated, isLoaded, router]);
 
   const newJobs = jobs.filter((j) => j.status === "new").length;
   const inProgress = jobs.filter((j) => j.status === "in_progress").length;

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
+  isLoaded: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -13,17 +14,20 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   token: null,
   isAuthenticated: false,
+  isLoaded: false,
   login: () => {},
   logout: () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const stored = localStorage.getItem("access_token");
     if (stored) setToken(stored);
+    setIsLoaded(true);
   }, []);
 
   const login = useCallback((newToken: string) => {
@@ -38,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated: !!token, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuthenticated: !!token, isLoaded, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
