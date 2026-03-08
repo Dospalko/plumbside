@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Space_Mono } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+const headingFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
-const mono = Space_Mono({
-  weight: ["400", "700"],
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -25,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sk" className={`${mono.variable} ${bricolage.variable}`}>
-      <body className="font-sans antialiased text-slate-900 bg-[#FAF9F6] selection:bg-orange-500 selection:text-white relative min-h-screen">
+    <html lang="sk" className={`${inter.variable} ${headingFont.variable}`}>
+      <body className="font-sans antialiased text-slate-900 bg-slate-50 selection:bg-blue-100 selection:text-blue-900 relative min-h-screen">
         <Providers>{children}</Providers>
       </body>
     </html>

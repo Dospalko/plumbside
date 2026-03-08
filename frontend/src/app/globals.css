@@ -48,53 +48,53 @@
 }
 
 :root {
-  /* Industrial Maximalist Palette */
-  --background: oklch(0.985 0.005 85); /* Off-white #FAF9F6 */
-  --foreground: oklch(0.18 0.02 260); /* Deep Obsidian/Slate */
+  /* Clean User-Friendly SaaS Palette */
+  --background: oklch(0.985 0.005 240); /* Very light cool slate/white */
+  --foreground: oklch(0.2 0.02 250); /* Dark Slate */
   
   --card: oklch(1 0 0); /* Pure White */
-  --card-foreground: oklch(0.18 0.02 260);
+  --card-foreground: oklch(0.2 0.02 250);
   
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 260);
+  --popover-foreground: oklch(0.2 0.02 250);
   
-  /* Primary: Safety Orange for an industrial vibe */
-  --primary: oklch(0.65 0.2 40); /* Bold Orange */
-  --primary-foreground: oklch(0.985 0.005 85);
+  /* Primary: Calm, trustworthy Blue */
+  --primary: oklch(0.55 0.15 250); 
+  --primary-foreground: oklch(0.985 0.005 240);
   
-  /* Secondary: Very light technical blue/gray */
-  --secondary: oklch(0.95 0.01 240); 
-  --secondary-foreground: oklch(0.18 0.02 260);
+  /* Secondary: Soft Slate */
+  --secondary: oklch(0.95 0.01 250); 
+  --secondary-foreground: oklch(0.2 0.02 250);
   
   /* Muted */
-  --muted: oklch(0.95 0.01 240);
-  --muted-foreground: oklch(0.55 0.02 260);
+  --muted: oklch(0.95 0.01 250);
+  --muted-foreground: oklch(0.45 0.02 250);
   
   /* Accent */
-  --accent: oklch(0.95 0.01 240);
-  --accent-foreground: oklch(0.18 0.02 260);
+  --accent: oklch(0.95 0.01 250);
+  --accent-foreground: oklch(0.2 0.02 250);
   
-  --destructive: oklch(0.6 0.2 25); /* Sharp Red */
-  --border: oklch(0.2 0 0 / 0.1); 
-  --input: oklch(0.2 0 0 / 0.1);
-  --ring: oklch(0.65 0.2 40);
+  --destructive: oklch(0.6 0.15 25); /* Standard Red */
+  --border: oklch(0.9 0.01 250); /* Soft border */
+  --input: oklch(0.9 0.01 250);
+  --ring: oklch(0.55 0.15 250);
   
-  --chart-1: oklch(0.65 0.2 40);
-  --chart-2: oklch(0.18 0.02 260);
+  --chart-1: oklch(0.55 0.15 250);
+  --chart-2: oklch(0.45 0.1 180);
   --chart-3: oklch(0.8 0.1 110);
   --chart-4: oklch(0.7 0.1 230);
-  --chart-5: oklch(0.6 0.2 25);
+  --chart-5: oklch(0.6 0.15 25);
   
-  --radius: 0px; /* Sharp edges for Brutalist/Industrial feel */
+  --radius: 0.5rem; /* Friendly rounded edges */
   
-  --sidebar: oklch(0.985 0.005 85);
-  --sidebar-foreground: oklch(0.18 0.02 260);
-  --sidebar-primary: oklch(0.65 0.2 40);
-  --sidebar-primary-foreground: oklch(0.985 0.005 85);
-  --sidebar-accent: oklch(0.95 0.01 240);
-  --sidebar-accent-foreground: oklch(0.18 0.02 260);
-  --sidebar-border: oklch(0.2 0 0 / 0.1);
-  --sidebar-ring: oklch(0.65 0.2 40);
+  --sidebar: oklch(0.985 0.005 240);
+  --sidebar-foreground: oklch(0.2 0.02 250);
+  --sidebar-primary: oklch(0.55 0.15 250);
+  --sidebar-primary-foreground: oklch(0.985 0.005 240);
+  --sidebar-accent: oklch(0.95 0.01 250);
+  --sidebar-accent-foreground: oklch(0.2 0.02 250);
+  --sidebar-border: oklch(0.9 0.01 250);
+  --sidebar-ring: oklch(0.55 0.15 250);
 }
 
 @layer base {

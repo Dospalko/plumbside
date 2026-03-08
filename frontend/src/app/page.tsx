@@ -27,7 +27,7 @@ export default function LandingPage() {
           </div>
           <nav className="flex items-center gap-6">
             <Link href="/login">
-              <span className="font-mono text-sm font-bold text-foreground hover:text-primary transition-colors cursor-pointer uppercase tracking-widest hidden md:block">
+              <span className="font-heading text-sm font-bold text-foreground hover:text-primary transition-colors cursor-pointer uppercase tracking-widest hidden md:block">
                 SYS.LOGIN()
               </span>
             </Link>
@@ -57,16 +57,16 @@ export default function LandingPage() {
           <div className="flex-1 w-full max-w-2xl">
             <div className="inline-flex items-center gap-2 border-[2px] border-foreground bg-white px-3 py-1 mb-8 shadow-[2px_2px_0px_#1a1919]">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-foreground">AI_PROCESOR_AKTÍVNY</span>
+              <span className="font-heading text-xs font-bold uppercase tracking-widest text-foreground">AI_PROCESOR_AKTÍVNY</span>
             </div>
             
-            <h1 className="text-[3.5rem] leading-[0.95] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter text-foreground mb-8">
+            <h1 className="text-[3.5rem] leading-[1.0] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter text-foreground mb-8">
               ZÁKAZKY<br/>
               <span className="text-primary [-webkit-text-stroke:2px_#1a1919] text-transparent drop-shadow-[4px_4px_0px_#1a1919]">POD</span><br/>
               KONTROLOU.
             </h1>
 
-            <p className="font-mono text-base md:text-lg text-foreground/80 mb-10 max-w-lg border-l-[4px] border-primary pl-4">
+            <p className="font-sans font-medium text-base md:text-lg text-foreground/80 mb-10 max-w-lg border-l-[4px] border-primary pl-4">
               Kompletný operačný systém pre inštalatérov, elektrikárov a lokálne servisy. Zahoďte papiere. Zvýšte výkon.
             </p>
 
@@ -76,7 +76,7 @@ export default function LandingPage() {
                   ZAČAŤ HNEĎ <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </Link>
-              <div className="flex items-center gap-2 font-mono text-sm text-foreground/70 font-bold uppercase self-center sm:self-auto mt-4 sm:mt-0">
+              <div className="flex items-center gap-2 font-heading text-sm text-foreground/70 font-bold uppercase self-center sm:self-auto mt-4 sm:mt-0">
                 <Zap className="h-5 w-5 text-primary" />
                 <span>Bez inštalácie</span>
               </div>
@@ -94,7 +94,7 @@ export default function LandingPage() {
           <motion.div 
             animate={{ x: [0, -1000] }}
             transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-            className="flex gap-8 whitespace-nowrap px-4 font-mono font-bold text-foreground uppercase tracking-widest text-sm"
+            className="flex gap-8 whitespace-nowrap px-4 font-heading font-bold text-foreground uppercase tracking-widest text-sm"
           >
             {[...Array(10)].map((_, i) => (
               <span key={i} className="flex items-center gap-8">
@@ -112,10 +112,10 @@ export default function LandingPage() {
         {/* Features Section Container */}
         <section className="py-32 px-6 max-w-[1400px] mx-auto">
           <div className="mb-20 max-w-3xl">
-            <h2 className="text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[0.9] text-foreground mb-6">
+            <h2 className="text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-6">
               MODULY<br/>SYSTÉMU
             </h2>
-            <p className="font-mono text-lg text-foreground/70 border-l-[2px] border-foreground pl-4">
+            <p className="font-sans font-medium text-lg text-foreground/70 border-l-[2px] border-foreground pl-4">
               Vytvorené špeciálne pre remeselníkov. Zabudnite na komplikované Enterprise riešenia. Toto je čistý, surový výkon.
             </p>
           </div>
@@ -127,10 +127,10 @@ export default function LandingPage() {
                   <div className="h-16 w-16 bg-[#FAF9F6] border-[2px] border-foreground flex items-center justify-center shadow-[4px_4px_0px_#1a1919] group-hover:bg-primary transition-colors">
                     <feature.icon className="h-8 w-8 text-foreground stroke-[2]" />
                   </div>
-                  <span className="font-mono text-2xl font-black text-foreground/20">0{idx + 1}</span>
+                  <span className="font-heading text-2xl font-black text-foreground/20">0{idx + 1}</span>
                 </div>
                 <h3 className="text-2xl font-black uppercase tracking-tight text-foreground mb-4">{feature.title}</h3>
-                <p className="font-mono text-sm text-foreground/70 leading-relaxed flex-1">{feature.description}</p>
+                <p className="font-sans font-medium text-sm text-foreground/70 leading-relaxed flex-1">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -147,12 +147,12 @@ export default function LandingPage() {
               </div>
               <h2 className="text-3xl font-black tracking-tighter uppercase">Rýchly Servis</h2>
             </div>
-            <p className="font-mono text-sm text-[#FAF9F6]/60">
+            <p className="font-sans font-medium text-sm text-[#FAF9F6]/60">
               Umelá inteligencia pre skutočnú prácu. Nehráme sa na IT. Upratujeme servis.
             </p>
           </div>
           
-          <div className="font-mono text-xs text-[#FAF9F6]/40 uppercase tracking-widest text-right">
+          <div className="font-heading text-xs text-[#FAF9F6]/40 uppercase tracking-widest text-right">
             [ VER. 1.0.0 ]<br/>
             © {new Date().getFullYear()} Všetky práva vyhradené
           </div>
@@ -162,65 +162,36 @@ export default function LandingPage() {
   );
 }
 
-function SparklesIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-      <path d="M5 3v4" />
-      <path d="M19 17v4" />
-      <path d="M3 5h4" />
-      <path d="M17 19h4" />
-    </svg>
-  );
-}
-
 const FEATURES = [
   {
     title: "AI Asistent na hlasovky",
     description: "Zákazník vám pošle WhatsApp hlasovku? Nahrajte ju do systému a AI ju prepíše, nájde adresu a predvyplní pracovný list.",
     icon: Mic,
-    color: "bg-purple-100 text-purple-700"
   },
   {
     title: "Kanban Nástenka",
     description: "Prehľadný systém stĺpcov ('Nové', 'Nacenené', 'Prebieha'). Zákazky jednoducho preklikávate podla aktuálneho stavu.",
     icon: ClipboardList,
-    color: "bg-blue-100 text-blue-700"
   },
   {
     title: "Prehľadné plánovanie",
     description: "Nikdy nezabudnete kedy máte kam ísť. Pridávajte konkrétne termíny a časy výjazdov priamo do karty zákazky.",
     icon: Calendar,
-    color: "bg-orange-100 text-orange-700"
   },
   {
     title: "Klientska databáza (CRM)",
     description: "Všetci zákazníci na jednom mieste s kompletnou históriou opráv, telefónnymi číslami a adresami.",
     icon: Users,
-    color: "bg-emerald-100 text-emerald-700"
   },
   {
     title: "Denník aktivity",
     description: "Píšte si interné poznámky o priebehu práce. Čo bolo dohodnuté na mieste zostane zaznamenané navždy.",
     icon: CheckCircle2,
-    color: "bg-slate-200 text-slate-700"
   },
   {
     title: "Blesková rýchlosť",
     description: "Aplikácia reaguje okamžite bez otravného načítavania. Moderná architektúra šetrí váš čas pri každom kliknutí.",
     icon: Zap,
-    color: "bg-amber-100 text-amber-700"
   }
 ];
 
@@ -245,7 +216,7 @@ function HeroDemo() {
         <div className="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-foreground p-8 flex flex-col justify-center items-center bg-[#FAF9F6] relative pt-12">
           
           <div className="w-full mb-8">
-            <span className="bg-foreground text-white font-mono text-[10px] uppercase font-bold px-3 py-1 tracking-widest">
+            <span className="bg-foreground text-white font-heading text-[10px] uppercase font-bold px-3 py-1 tracking-widest">
               &gt; VSTUPNÝ MODUL
             </span>
           </div>
@@ -278,7 +249,7 @@ function HeroDemo() {
                      />
                   ))}
                 </div>
-                <p className="font-mono text-[10px] text-foreground font-bold uppercase tracking-widest mt-2">{"> SYS.AUDIO / 0:14"}</p>
+                <p className="font-heading text-[10px] text-foreground font-bold uppercase tracking-widest mt-2">{"> SYS.AUDIO / 0:14"}</p>
               </div>
             </motion.div>
 
@@ -290,7 +261,7 @@ function HeroDemo() {
                 x: step === 1 ? -20 : -10,
                 y: -15
               }}
-              className="absolute -bottom-8 -right-8 bg-primary text-foreground border-[2px] border-foreground font-mono text-[11px] font-black px-4 py-2 shadow-[4px_4px_0px_#1a1919] flex items-center gap-2 uppercase tracking-wide z-10"
+              className="absolute -bottom-8 -right-8 bg-primary text-foreground border-[2px] border-foreground font-heading text-[11px] font-black px-4 py-2 shadow-[4px_4px_0px_#1a1919] flex items-center gap-2 uppercase tracking-wide z-10"
             >
               <Zap className="w-4 h-4" />
               Spracovávam...
@@ -301,7 +272,7 @@ function HeroDemo() {
         {/* Right: Output Kanban Card */}
         <div className="flex-1 p-8 flex flex-col justify-center items-center bg-foreground relative pt-12 overflow-hidden">
           <div className="w-full mb-8 text-right">
-            <span className="bg-primary text-foreground font-mono text-[10px] uppercase font-bold px-3 py-1 tracking-widest border-[1px] border-primary">
+            <span className="bg-primary text-foreground font-heading text-[10px] uppercase font-bold px-3 py-1 tracking-widest border-[1px] border-primary">
               &gt; CRM VÝSTUP
             </span>
           </div>
@@ -327,7 +298,7 @@ function HeroDemo() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: step >= 2 ? 1 : 0 }}
                   transition={{ delay: 0.2 }}
-                  className="font-mono text-xs text-foreground/80 mb-5 leading-relaxed"
+                  className="font-sans font-medium text-xs text-foreground/80 mb-5 leading-relaxed"
                >
                  <span className="font-bold uppercase text-foreground">Popis:</span> Masívny únik pod vaňou. Zastavili prívod.<br/><br/>
                  <span className="font-bold uppercase text-foreground">Lokácia:</span> 831 04, Dlhá ul.
@@ -339,11 +310,11 @@ function HeroDemo() {
                  className="flex flex-col gap-2"
                >
                  <div className="flex justify-between items-center bg-[#FAF9F6] border-[2px] border-foreground px-2 py-1">
-                   <span className="text-[10px] font-mono font-bold uppercase">Naliehavosť</span>
+                   <span className="text-[10px] font-heading font-bold uppercase">Naliehavosť</span>
                    <span className="bg-destructive text-white text-[10px] font-black px-2 py-0.5 tracking-wider uppercase">KRITICKÁ</span>
                  </div>
                  
-                 <button className="w-full bg-foreground text-white font-mono text-[10px] uppercase font-bold py-2 hover:bg-primary hover:text-foreground transition-colors mt-2">
+                 <button className="w-full bg-foreground text-white font-heading text-[10px] uppercase font-bold py-2 hover:bg-primary hover:text-foreground transition-colors mt-2">
                    ŠTART VÝJAZDU
                  </button>
                </motion.div>

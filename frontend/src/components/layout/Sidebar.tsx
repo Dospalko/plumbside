@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wrench, Users, Calendar, Settings, LogOut, LayoutDashboard } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
@@ -19,60 +18,64 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-full w-64 shrink-0 flex-col bg-transparent px-4 py-6 relative z-0">
+    <div className="flex h-full w-64 shrink-0 flex-col bg-slate-900 text-slate-100 px-4 py-8 shadow-xl relative z-20">
+      
       <div className="mb-10 px-3 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md shadow-blue-600/20">
-          <Wrench className="h-5 w-5" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 shadow-md">
+          <Wrench className="h-5 w-5 text-white stroke-[2.5]" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          PlumbSide
+        <h1 className="text-xl font-bold tracking-tight text-white leading-tight">
+          Rýchly <br/> Servis
         </h1>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1.5">
-        <p className="px-4 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Menu</p>
-        {NAV_ITEMS.map((item) => (
-          <Link key={item.href} href={item.disabled ? "#" : item.href}>
-            <Button
-              variant="ghost"
-              className={cn(
-                "w-full justify-start gap-3 h-[42px] px-4 rounded-xl transition-all duration-200 font-medium",
-                pathname === item.href 
-                  ? "bg-white text-blue-700 shadow-sm border border-slate-200/60" 
-                  : "text-slate-600 hover:bg-slate-200/50 hover:text-slate-900",
-                item.disabled && "text-slate-400 hover:text-slate-400 hover:bg-transparent cursor-not-allowed opacity-60"
-              )}
-            >
-              <item.icon className={cn("h-[18px] w-[18px]", pathname === item.href ? "text-blue-600" : "text-slate-400")} />
-              {item.label}
-            </Button>
-          </Link>
-        ))}
+        <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          Hlavné Menu
+        </p>
+        
+        {NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link key={item.href} href={item.disabled ? "#" : item.href} className="w-full">
+              <button
+                className={cn(
+                  "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
+                  isActive 
+                    ? "bg-blue-600 text-white shadow-sm" 
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white",
+                  item.disabled && "text-slate-500 hover:text-slate-500 hover:bg-transparent cursor-not-allowed opacity-60"
+                )}
+              >
+                <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-slate-400")} />
+                {item.label}
+              </button>
+            </Link>
+          );
+        })}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-1.5 pt-6">
-        <Link href="/dashboard/settings">
-          <Button
-            variant="ghost"
+      <div className="mt-auto flex flex-col gap-1.5 pt-6 border-t border-slate-800">
+        <Link href="/dashboard/settings" className="w-full">
+          <button
             className={cn(
-              "w-full justify-start gap-3 h-[42px] px-4 rounded-xl transition-all duration-200 font-medium",
+              "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
               pathname === "/dashboard/settings" 
-                ? "bg-white text-blue-700 shadow-sm border border-slate-200/60" 
-                : "text-slate-600 hover:bg-slate-200/50 hover:text-slate-900"
+                ? "bg-blue-600 text-white shadow-sm" 
+                : "text-slate-300 hover:bg-slate-800 hover:text-white"
             )}
           >
-            <Settings className={cn("h-[18px] w-[18px]", pathname === "/dashboard/settings" ? "text-blue-600" : "text-slate-400")} />
+            <Settings className={cn("h-5 w-5", pathname === "/dashboard/settings" ? "text-white" : "text-slate-400")} />
             Nastavenia
-          </Button>
+          </button>
         </Link>
-        <Button
-          variant="ghost"
-          className="w-full justify-start gap-3 h-[42px] px-4 rounded-xl font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+        <button
+          className="w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200 text-slate-400 hover:bg-red-500/10 hover:text-red-400"
           onClick={logout}
         >
-          <LogOut className="h-[18px] w-[18px] text-slate-400" />
+          <LogOut className="h-5 w-5 text-slate-500 group-hover:text-red-400" />
           Odhlásiť sa
-        </Button>
+        </button>
       </div>
     </div>
   );

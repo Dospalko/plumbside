@@ -141,150 +141,165 @@ export default function JobDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-5xl w-full mx-auto px-6 py-8 flex-1">
+    <div className="flex flex-col gap-8 max-w-5xl w-full mx-auto px-6 py-8 flex-1 bg-transparent">
       <div className="border-b border-slate-200 pb-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div>
           <Link href="/dashboard/jobs">
-            <Button variant="ghost" className="gap-2 mb-4 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg h-9 px-3 -ml-3">
-              <ArrowLeft className="h-4 w-4" /> Späť na Kanban
-            </Button>
+            <button className="flex items-center gap-2 mb-6 font-semibold text-sm text-slate-500 hover:text-slate-900 transition-colors">
+              <ArrowLeft className="h-4 w-4" /> Naspäť na Nástenku
+            </button>
           </Link>
           
           <div className="group relative pr-10">
             {isEditingTitle ? (
-              <div className="flex items-center gap-2 mb-2">
-                <Input 
+              <div className="flex items-center gap-3 mb-2">
+                <input 
                   value={editTitle} 
                   onChange={e => setEditTitle(e.target.value)} 
-                  className="text-2xl font-bold h-12 w-full max-w-md bg-white border-blue-200 outline-none focus-visible:ring-1 focus-visible:ring-blue-500"
+                  className="text-2xl font-bold h-12 w-full max-w-md bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 px-4"
                   autoFocus
                 />
-                <Button size="icon" variant="ghost" className="text-red-500 hover:bg-red-50" onClick={() => setIsEditingTitle(false)}><X className="h-4 w-4"/></Button>
-                <Button size="icon" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm" onClick={() => handleUpdateDetails('title')}><Check className="h-4 w-4"/></Button>
+                <button className="h-10 w-10 flex items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors" onClick={() => setIsEditingTitle(false)}><X className="h-5 w-5"/></button>
+                <button className="h-10 w-10 flex items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" onClick={() => handleUpdateDetails('title')}><Check className="h-5 w-5"/></button>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <h2 className="text-3xl font-bold tracking-tight text-slate-900">{job.title}</h2>
-                <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-blue-600 hover:bg-blue-50" onClick={() => {
+                <button className="h-8 w-8 flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 transition-opacity border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900" onClick={() => {
                   setEditTitle(job.title);
                   setIsEditingTitle(true);
                 }}>
                   <Edit2 className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
             )}
           </div>
           
-          <p className="text-sm text-slate-500 mt-1 flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-slate-200"></span>
-            Vytvorené {new Date(job.created_at).toLocaleDateString("sk-SK")}
+          <p className="text-sm font-medium text-slate-500 mt-2 flex items-center gap-2">
+            Založené {new Date(job.created_at).toLocaleDateString("sk-SK")}
           </p>
         </div>
         <div className="mt-8 md:mt-12">
-          <Badge variant="secondary" className="w-fit text-sm px-4 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border-0 shadow-sm shadow-blue-600/10">
+          <Badge className={`px-4 py-1.5 text-sm font-semibold rounded-full ${
+            job.status === "new" ? "bg-blue-100 text-blue-700" :
+            job.status === "in_progress" ? "bg-amber-100 text-amber-700" :
+            job.status === "done" ? "bg-emerald-100 text-emerald-700" :
+            "bg-slate-100 text-slate-700"
+          }`}>
             {STATUS_LABELS[job.status] || job.status}
           </Badge>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-[1fr_380px]">
+      <div className="grid gap-8 md:grid-cols-[1fr_380px]">
         {/* Main Content Column */}
         <div className="space-y-6">
-          <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-slate-900 tracking-tight">
-                Detail problému
+          <Card className="rounded-xl border border-slate-200 shadow-sm bg-white flex flex-col overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Euro className="h-5 w-5 text-slate-400" /> Detaily Zákazky
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 p-5">
+            <CardContent className="p-6 space-y-6">
               
               {/* Urgency & Prices */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-2">
+              <div className="flex flex-col sm:flex-row gap-4">
                 
-                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 group relative">
+                <div className="flex-1 bg-slate-50 border border-slate-100 rounded-lg p-5 group relative">
                   <div className="flex justify-between items-start">
-                    <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Naliehavosť</span>
+                    <span className="block text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Naliehavosť</span>
                     {!isEditingUrgency && (
-                      <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 text-slate-400 hover:text-blue-600 bg-white shadow-sm border border-slate-100" onClick={() => {
+                      <button className="h-7 w-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-md border border-slate-200 bg-white text-slate-400 hover:text-slate-900 hover:bg-slate-100 absolute right-3 top-3" onClick={() => {
                         setEditUrgency(job.urgency);
                         setIsEditingUrgency(true);
                       }}>
-                        <Edit2 className="h-3 w-3" />
-                      </Button>
+                        <Edit2 className="h-3.5 w-3.5" />
+                      </button>
                     )}
                   </div>
                   
                   {isEditingUrgency ? (
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {["low", "normal", "high", "critical"].map((u) => (
-                        <Badge 
-                          key={u}
-                          variant="outline"
-                          className={`cursor-pointer transition-colors px-3 py-1 text-xs ${
-                            editUrgency === u 
-                              ? "bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200" 
-                              : "bg-white hover:bg-slate-100 border-slate-200 text-slate-600"
-                          }`}
-                          onClick={() => setEditUrgency(u)}
-                        >
-                          {u}
-                        </Badge>
-                      ))}
-                      <div className="flex w-full justify-end gap-1 mt-2 border-t border-slate-200 pt-2">
-                         <Button size="icon" variant="ghost" className="h-7 w-7 text-red-500 hover:bg-red-50" onClick={() => setIsEditingUrgency(false)}><X className="h-3.5 w-3.5"/></Button>
-                         <Button size="icon" className="h-7 w-7 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => handleUpdateDetails('urgency')}><Check className="h-3.5 w-3.5"/></Button>
+                    <div className="flex flex-col gap-3 mt-2">
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          {val: "low", label: "Nízka"}, 
+                          {val: "normal", label: "Normálna"}, 
+                          {val: "high", label: "Vysoká"}, 
+                          {val: "critical", label: "Kritická"}
+                        ].map((u) => (
+                          <button 
+                            key={u.val}
+                            className={`font-semibold text-xs px-3 py-1.5 rounded-md border ${
+                              editUrgency === u.val
+                                ? "bg-blue-600 text-white border-blue-600 shadow-sm" 
+                                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            }`}
+                            onClick={() => setEditUrgency(u.val)}
+                          >
+                            {u.label}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex w-full justify-end gap-2 mt-2 pt-2 border-t border-slate-200/50">
+                         <button className="h-8 w-8 flex items-center justify-center rounded-md text-red-600 hover:bg-red-50 transition-colors" onClick={() => setIsEditingUrgency(false)}><X className="h-4 w-4"/></button>
+                         <button className="h-8 w-8 flex items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" onClick={() => handleUpdateDetails('urgency')}><Check className="h-4 w-4"/></button>
                       </div>
                     </div>
                   ) : (
-                    <Badge 
-                      variant={(job.urgency === "high" || job.urgency === "critical") ? "destructive" : "secondary"} 
-                      className={`shadow-none rounded-md px-2.5 py-1 font-medium ${
-                        job.urgency === 'low' ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' :
-                        job.urgency === 'normal' ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' :
-                        job.urgency === 'high' ? 'bg-orange-100 text-orange-800 hover:bg-orange-200' :
-                        'bg-red-100 text-red-800 hover:bg-red-200'
-                      }`}
-                    >
-                      {job.urgency === "low" ? "Nízka" :
-                       job.urgency === "normal" ? "Normálna" :
-                       job.urgency === "high" ? "Vysoká" : "Kritická"}
-                    </Badge>
+                    <div className="mt-1">
+                      <span className={`inline-block px-2.5 py-1 text-sm font-semibold rounded-md ${
+                        job.urgency === 'critical' ? 'bg-red-100 text-red-700' :
+                        job.urgency === 'high' ? 'bg-orange-100 text-orange-700' :
+                        job.urgency === 'normal' ? 'bg-blue-100 text-blue-700' :
+                        'bg-slate-200 text-slate-700'
+                      }`}>
+                        {job.urgency === "low" ? "Nízka" :
+                         job.urgency === "normal" ? "Normálna" :
+                         job.urgency === "high" ? "Vysoká" : "Kritická"}
+                      </span>
+                    </div>
                   )}
                 </div>
 
-                <div className="flex-1 bg-slate-50 rounded-xl p-4 border border-slate-100 group relative">
+                <div className="flex-1 bg-slate-50 border border-slate-100 rounded-lg p-5 group relative">
                   <div className="flex justify-between items-start">
-                    <span className="block text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Cena</span>
+                    <span className="block text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2">Cena</span>
                     {!isEditingPrice && (
-                      <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 text-slate-400 hover:text-blue-600 bg-white shadow-sm border border-slate-100" onClick={() => {
+                      <button className="h-7 w-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-md border border-slate-200 bg-white text-slate-400 hover:text-slate-900 hover:bg-slate-100 absolute right-3 top-3" onClick={() => {
                         setEditEstPrice(job.estimated_price?.toString() || "");
                         setEditFinalPrice(job.final_price?.toString() || "");
                         setIsEditingPrice(true);
                       }}>
-                        <Edit2 className="h-3 w-3" />
-                      </Button>
+                        <Edit2 className="h-3.5 w-3.5" />
+                      </button>
                     )}
                   </div>
                   
                   {isEditingPrice ? (
-                    <div className="space-y-2 mt-2">
-                       <div className="flex items-center gap-2">
-                         <span className="text-xs text-slate-500 w-12">Odhad:</span>
-                         <Input type="number" value={editEstPrice} onChange={e => setEditEstPrice(e.target.value)} placeholder="0.00" className="h-7 text-sm" />
+                    <div className="space-y-3 mt-2">
+                       <div className="flex items-center gap-3">
+                         <span className="text-xs font-semibold text-slate-500 w-14">Odhad:</span>
+                         <input type="number" value={editEstPrice} onChange={e => setEditEstPrice(e.target.value)} placeholder="0.00" className="flex-1 h-8 bg-white border border-slate-200 rounded-md px-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                        </div>
-                       <div className="flex items-center gap-2">
-                         <span className="text-xs text-slate-500 w-12">Finálna:</span>
-                         <Input type="number" value={editFinalPrice} onChange={e => setEditFinalPrice(e.target.value)} placeholder="0.00" className="h-7 text-sm" />
+                       <div className="flex items-center gap-3">
+                         <span className="text-xs font-semibold text-slate-500 w-14">Finál:</span>
+                         <input type="number" value={editFinalPrice} onChange={e => setEditFinalPrice(e.target.value)} placeholder="0.00" className="flex-1 h-8 bg-white border border-slate-200 rounded-md px-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                        </div>
-                       <div className="flex justify-end gap-1 mt-3 border-t border-slate-200 pt-2">
-                         <Button size="icon" variant="ghost" className="h-7 w-7 text-red-500 hover:bg-red-50" onClick={() => setIsEditingPrice(false)}><X className="h-3.5 w-3.5"/></Button>
-                         <Button size="icon" className="h-7 w-7 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => handleUpdateDetails('price')}><Check className="h-3.5 w-3.5"/></Button>
+                       <div className="flex justify-end gap-2 mt-2 pt-2 border-t border-slate-200/50">
+                         <button className="h-8 w-8 flex items-center justify-center rounded-md text-red-600 hover:bg-red-50 transition-colors" onClick={() => setIsEditingPrice(false)}><X className="h-4 w-4"/></button>
+                         <button className="h-8 w-8 flex items-center justify-center rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" onClick={() => handleUpdateDetails('price')}><Check className="h-4 w-4"/></button>
                        </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-sm">Odhad: <span className="font-semibold text-slate-900">{job.estimated_price ? `${job.estimated_price} €` : "—"}</span></span>
-                      <span className="text-sm">Finálna: <span className="font-semibold text-green-600 border-b border-green-200">{job.final_price ? `${job.final_price} €` : "—"}</span></span>
+                    <div className="flex flex-col gap-1 mt-1">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-sm font-medium text-slate-500">Odhad:</span>
+                        <span className="text-base font-semibold text-slate-700">{job.estimated_price ? `${job.estimated_price} €` : "—"}</span>
+                      </div>
+                      <div className="flex items-baseline justify-between mt-1 pt-1 border-t border-slate-200/50">
+                        <span className="text-sm font-medium text-slate-500">Finálna:</span>
+                        <span className="text-xl font-bold text-emerald-600">{job.final_price ? `${job.final_price} €` : "—"}</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -292,38 +307,38 @@ export default function JobDetailPage() {
               
               {/* Description */}
               <div className="pt-2 group relative">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="text-sm font-semibold text-slate-700">Popis zákazky</h4>
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-sm font-semibold text-slate-900">Popis problému</h4>
                   {!isEditingDesc && (
-                    <Button variant="ghost" size="sm" className="h-7 text-xs px-3 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 hover:text-blue-600 bg-white border border-slate-100 shadow-sm rounded-lg" onClick={() => {
+                    <button className="flex items-center gap-1.5 h-7 px-2 text-xs font-medium text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-md hover:bg-slate-100" onClick={() => {
                       setEditDesc(job.description || "");
                       setIsEditingDesc(true);
                     }}>
-                      <Edit2 className="h-3 w-3 mr-1.5" /> Upraviť
-                    </Button>
+                      <Edit2 className="h-3 w-3" /> Upraviť
+                    </button>
                   )}
                 </div>
 
                 {isEditingDesc ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Textarea 
                       value={editDesc} 
                       onChange={e => setEditDesc(e.target.value)} 
-                      rows={4}
-                      className="text-sm bg-slate-50 border-slate-200"
+                      rows={5}
+                      className="w-full text-sm resize-y"
                     />
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 border border-slate-200 bg-white h-8" onClick={() => setIsEditingDesc(false)}>Zrušiť</Button>
-                      <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm h-8 px-4" onClick={() => handleUpdateDetails('desc')}>Uložiť</Button>
+                    <div className="flex justify-end gap-3">
+                      <Button variant="outline" size="sm" onClick={() => setIsEditingDesc(false)}>Zrušiť</Button>
+                      <Button size="sm" onClick={() => handleUpdateDetails('desc')}>Uložiť zmeny</Button>
                     </div>
                   </div>
                 ) : (
                   job.description ? (
-                    <p className="text-slate-700 leading-relaxed text-sm whitespace-pre-wrap p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap p-4 bg-slate-50 rounded-lg border border-slate-100">
                       {job.description}
-                    </p>
+                    </div>
                   ) : (
-                    <p className="text-slate-400 text-sm italic py-2">Bez bližšieho popisu.</p>
+                    <p className="text-sm text-slate-400 italic py-2">Pridajte popis zákazky na tomto mieste.</p>
                   )
                 )}
               </div>
@@ -331,138 +346,141 @@ export default function JobDetailPage() {
           </Card>
 
           {/* Activity Section */}
-          <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2 tracking-tight">
-                <MessageSquare className="h-5 w-5 text-blue-600" />
-                Aktivita & Poznámky
+          <Card className="rounded-xl border border-slate-200 shadow-sm bg-white flex flex-col overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-slate-400" /> Komunikácia a Poznámky
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
-              <div className="max-h-[300px] overflow-y-auto p-5 space-y-4">
+            <div className="flex flex-col">
+              <div className="max-h-[400px] overflow-y-auto p-5 space-y-4 bg-white">
                 {(job.messages || []).length === 0 ? (
-                  <p className="text-sm text-slate-400 italic text-center py-4">Žiadne poznámky.</p>
+                  <p className="text-sm text-slate-400 text-center py-6">Žiadne poznámky zatiaľ.</p>
                 ) : (
                   (job.messages || []).map((msg) => (
                     <div key={msg.id} className="flex gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-xs font-medium text-slate-500">
-                          {msg.direction === "INBOUND" ? "IN" : "OUT"}
-                        </span>
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                        <MessageSquare className="w-4 h-4" />
                       </div>
-                      <div className="flex-1 bg-slate-50 rounded-2xl rounded-tl-sm p-3.5 border border-slate-100">
+                      <div className="flex-1 bg-slate-50 rounded-lg rounded-tl-none p-3 border border-slate-100">
                         <p className="text-sm text-slate-700 whitespace-pre-wrap">{msg.content}</p>
-                        <p className="text-[10px] text-slate-400 mt-2 font-medium">
-                          {new Date(msg.created_at).toLocaleString("sk-SK")} • {msg.channel}
+                        <p className="text-[10px] font-medium text-slate-400 mt-2">
+                          {new Date(msg.created_at).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" })}
                         </p>
                       </div>
                     </div>
                   ))
                 )}
               </div>
-              <div className="p-4 border-t border-slate-50 bg-slate-50/30">
-                <form onSubmit={handleAddMessage} className="flex gap-2">
+              <div className="p-4 border-t border-slate-100 bg-slate-50">
+                <form onSubmit={handleAddMessage} className="flex gap-3">
                   <Input 
                     placeholder="Pridať internú poznámku..." 
-                    className="flex-1 rounded-xl border-slate-200 bg-white"
+                    className="flex-1 bg-white"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                   />
-                  <Button type="submit" disabled={isSubmittingMessage || !newMessage.trim()} className="rounded-xl px-4 bg-blue-600 hover:bg-blue-700">
+                  <Button type="submit" disabled={isSubmittingMessage || !newMessage.trim()} size="icon" className="shrink-0">
                     <Send className="h-4 w-4" />
                   </Button>
                 </form>
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* Sidebar Column */}
         <div className="space-y-6">
-          <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5">
-              <CardTitle className="text-lg font-semibold text-slate-900 tracking-tight">
-                Zákazník
-              </CardTitle>
+          <Card className="rounded-xl border border-slate-200 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900">Zákazník</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 p-5">
+            <CardContent className="p-5">
               {customer ? (
                 <>
-                  <p className="font-semibold text-slate-900 text-xl">{customer.name}</p>
-                  <div className="space-y-2 text-sm text-slate-600 mt-2">
-                    <p className="flex items-center gap-2"><span className="text-slate-400 w-16">Telefón:</span> <span className="font-medium text-slate-800">{customer.phone || "—"}</span></p>
-                    <p className="flex items-center gap-2"><span className="text-slate-400 w-16">Email:</span> <span className="font-medium text-slate-800">{customer.email || "—"}</span></p>
-                    <p className="flex flex-col gap-1 mt-3"><span className="text-slate-400">Adresa:</span> <span className="p-2 bg-slate-50 rounded-lg border border-slate-100">{customer.address || "Neuvedená"}</span></p>
+                  <p className="font-bold text-lg text-slate-900 mb-4">{customer.name}</p>
+                  <div className="space-y-3 text-sm border-t border-slate-100 pt-4">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs font-semibold text-slate-500">Telefón:</span>
+                      <span className="font-medium text-slate-900">{customer.phone || "—"}</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs font-semibold text-slate-500">Email:</span>
+                      <span className="text-slate-700">{customer.email || "—"}</span>
+                    </div>
+                    <div className="flex flex-col gap-1 pt-1">
+                      <span className="text-xs font-semibold text-slate-500">Adresa:</span>
+                      <span className="text-slate-700 leading-relaxed bg-slate-50 p-2 rounded-md border border-slate-100 mt-1">
+                        {customer.address || "Neuvedená"}
+                      </span>
+                    </div>
                   </div>
                 </>
               ) : (
-                <p className="text-slate-500 italic text-sm">Zákazník nenájdený.</p>
+                <p className="text-sm text-slate-400 py-2">Zákazník nebol nájdený.</p>
               )}
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5 flex flex-row items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2 tracking-tight">
-                <Calendar className="h-5 w-5 text-indigo-500" />
-                Plánovanie
+          <Card className="rounded-xl border border-slate-200 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-slate-400" /> Plánovanie
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-5 space-y-4">
+            <CardContent className="p-5">
               {job.appointments && job.appointments.length > 0 ? (
-                <div className="space-y-3">
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Naplánované termíny</p>
+                <div className="space-y-3 mb-5">
                   {job.appointments.map(appt => (
-                    <div key={appt.id} className="flex items-center gap-3 p-3 bg-indigo-50 border border-indigo-100 text-indigo-900 rounded-xl">
-                      <Clock className="h-4 w-4 text-indigo-500" />
+                    <div key={appt.id} className="flex items-center gap-3 p-3 rounded-lg border border-blue-100 bg-blue-50/50">
+                      <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                        <Clock className="h-4 w-4" />
+                      </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold">{new Date(appt.scheduled_time).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" })}</span>
-                        <span className="text-[10px] text-indigo-500 font-medium">Trvanie: {appt.duration_minutes || 60} min</span>
+                        <span className="text-sm font-semibold text-slate-900">{new Date(appt.scheduled_time).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" })}</span>
+                        <span className="text-xs font-medium text-slate-500 mt-0.5">{appt.duration_minutes || 60} minút</span>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-slate-500 italic pb-2">Zatiaľ nenaplánované.</p>
+                <p className="text-sm text-slate-400 mb-5">Zatiaľ žiadne naplánované termíny.</p>
               )}
               
-              <form onSubmit={handleAddAppointment} className="flex flex-col gap-3 pt-3 border-t border-slate-100">
-                <label className="text-xs font-semibold text-slate-600">Nový termín</label>
+              <form onSubmit={handleAddAppointment} className="flex flex-col gap-3 pt-5 border-t border-slate-100">
+                <label className="text-xs font-semibold text-slate-500">Nový termín</label>
                 <Input 
                   type="datetime-local" 
                   value={appointmentDate}
                   onChange={e => setAppointmentDate(e.target.value)}
-                  className="rounded-xl border-slate-200"
+                  className="w-full text-sm"
                 />
-                <Button type="submit" disabled={isSubmittingAppt || !appointmentDate} className="w-full rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-sm">
+                <Button type="submit" disabled={isSubmittingAppt || !appointmentDate} className="w-full mt-1">
                   Pridať termín
                 </Button>
               </form>
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border border-slate-200/60 shadow-[0_2px_10px_rgb(0,0,0,0.02)] bg-white overflow-hidden">
-            <CardHeader className="border-b border-slate-50 bg-slate-50/50 p-5">
-              <CardTitle className="text-lg font-semibold text-slate-900 tracking-tight">
-                Stav zákazky
-              </CardTitle>
+          <Card className="rounded-xl border border-slate-200 shadow-sm bg-white overflow-hidden">
+            <CardHeader className="border-b border-slate-100 bg-slate-50/50 p-5">
+              <CardTitle className="text-lg font-semibold text-slate-900">Zmeniť Stav</CardTitle>
             </CardHeader>
             <CardContent className="p-5">
               <div className="flex flex-col gap-2">
                 {STATUSES.map((s) => (
-                  <Button
+                  <button
                     key={s}
-                    variant={s === job.status ? "default" : "outline"}
                     onClick={() => handleStatusChange(s)}
                     disabled={s === job.status}
-                    className={`justify-start h-[42px] rounded-xl font-medium transition-colors ${
+                    className={`text-left text-sm font-medium px-4 py-2.5 rounded-lg transition-colors border ${
                       s === job.status 
-                        ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm shadow-blue-600/20 border-transparent" 
-                        : "text-slate-600 border-slate-200 bg-white hover:bg-slate-50 hover:text-slate-900"
+                        ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm cursor-default"
+                        : "bg-white border-slate-100 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                     }`}
                   >
                     {STATUS_LABELS[s] || s}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </CardContent>

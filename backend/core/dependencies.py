@@ -33,3 +33,15 @@ async def get_current_tenant_id(payload: dict = Depends(get_current_token_payloa
         return UUID(tenant_id_str)
     except ValueError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Tenant ID format in token")
+
+async def get_current_user_id(payload: dict = Depends(get_current_token_payload)) -> UUID:
+    """
+    Extracts the current user ID from the validated JWT token payload ('sub' claim).
+    """
+    user_id_str: str = payload.get("sub")
+    if user_id_str is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token missing user definition")
+    try:
+        return UUID(user_id_str)
+    except ValueError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid User ID format in token")
