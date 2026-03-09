@@ -28,3 +28,8 @@ class AppointmentRepository:
         await self.db.commit()
         await self.db.refresh(new_appointment)
         return new_appointment
+
+    async def get_all(self, tenant_id: UUID) -> List[Appointment]:
+        query = select(Appointment).where(Appointment.tenant_id == tenant_id).order_by(Appointment.scheduled_time.asc())
+        result = await self.db.execute(query)
+        return list(result.scalars().all())

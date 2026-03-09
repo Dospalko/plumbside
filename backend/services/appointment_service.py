@@ -14,3 +14,7 @@ class AppointmentService:
         if appointment:
             return AppointmentResponse.model_validate(appointment)
         return None
+
+    async def list_appointments(self, tenant_id: UUID) -> list[AppointmentResponse]:
+        appointments = await self.repo.get_all(tenant_id)
+        return [AppointmentResponse.model_validate(a) for a in appointments]

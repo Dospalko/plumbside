@@ -47,8 +47,8 @@ class JobRepository:
         )
         self.db.add(new_job)
         await self.db.commit()
-        await self.db.refresh(new_job)
-        return new_job
+        # Re-fetch with eager-loaded relationships to avoid MissingGreenlet
+        return await self.get_by_id(new_job.id, tenant_id)
 
     async def update(self, job_id: UUID, tenant_id: UUID, job_data: JobUpdate) -> Optional[Job]:
         """Patch a job (usually to advance Kanban status)."""
@@ -58,11 +58,7 @@ class JobRepository:
 
         update_data = job_data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
-             # Extract string enum values if needed
-             if hasattr(value, "value"):
-                 setattr(job, field, value.value)
-             else:
-                 setattr(job, field, value)
+             setattr(job, field, value)
 
         await self.db.commit()
         await self.db.refresh(job)

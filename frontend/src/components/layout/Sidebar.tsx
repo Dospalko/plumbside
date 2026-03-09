@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/jobs", label: "Zákazky", icon: Wrench },
   { href: "/dashboard/customers", label: "Zákazníci", icon: Users },
-  { href: "/dashboard/calendar", label: "Kalendár (čoskoro)", icon: Calendar, disabled: true },
+  { href: "/dashboard/calendar", label: "Kalendár", icon: Calendar },
 ];
 
 export function Sidebar() {
@@ -37,14 +37,13 @@ export function Sidebar() {
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link key={item.href} href={item.disabled ? "#" : item.href} className="w-full">
+            <Link key={item.href} href={item.href} className="w-full">
               <button
                 className={cn(
                   "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
                   isActive 
                     ? "bg-blue-600 text-white shadow-sm" 
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white",
-                  item.disabled && "text-slate-500 hover:text-slate-500 hover:bg-transparent cursor-not-allowed opacity-60"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
                 )}
               >
                 <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-slate-400")} />

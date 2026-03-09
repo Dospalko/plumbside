@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers.v1 import jobs, auth, customers, users, tenants
+from routers.v1 import jobs, auth, customers, users, tenants, appointments
 from core.config import settings
 
 app = FastAPI(
@@ -27,6 +27,7 @@ app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(tenants.router, prefix="/api/v1/tenants", tags=["Tenants"])
 app.include_router(customers.router, prefix="/api/v1/customers", tags=["Customers"])
 app.include_router(jobs.router, prefix="/api/v1/jobs", tags=["Jobs"])
+app.include_router(appointments.router, prefix="/api/v1/appointments", tags=["Appointments"])
 
 @app.get("/health", tags=["System"])
 async def health_check():
