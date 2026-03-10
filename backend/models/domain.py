@@ -49,6 +49,7 @@ class User(TenantAwareModel):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     full_name: Mapped[str] = mapped_column(String, nullable=False)
     role: Mapped[UserRole] = mapped_column(Enum(UserRole), default=UserRole.TECHNICIAN, nullable=False)
+    is_super_admin: Mapped[bool] = mapped_column(default=False, server_default="false", nullable=False)
     
     tenant: Mapped["Tenant"] = relationship(back_populates="users")
 

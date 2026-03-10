@@ -45,3 +45,28 @@ async def get_current_user_id(payload: dict = Depends(get_current_token_payload)
         return UUID(user_id_str)
     except ValueError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid User ID format in token")
+
+async def get_current_user(
+    user_id: UUID = Depends(get_current_user_id),
+    db = Depends(get_db)
+):
+    from sqlalchemy import select
+    from models.domain import User
+    
+    query = select(User).where(User.id == user_id)
+    result = await db.execute(query)
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+async def get_super_admin_user(current_user = Depends(get_current_user)):
+    """
+    Verifies that the current user has the super admin flag.
+    """
+    if not current_user.is_super_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Nemáte administrátorské oprávnenia pre túto akciu."
+        )
+    return current_user

@@ -20,7 +20,8 @@ async def seed_db():
             email="admin@example.com",
             full_name="Ferko Mrkvicka",
             hashed_password=hashed_pw,
-            role=UserRole.OWNER.value
+            role=UserRole.OWNER.value,
+            is_super_admin=True
         )
         db.add(owner)
 
