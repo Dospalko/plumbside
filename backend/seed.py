@@ -1,12 +1,25 @@
 import asyncio
 from uuid import uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from core.database import AsyncSessionLocal, engine
 from models.domain import Tenant, User, Customer, Job, UserRole, JobStatus, JobUrgency
 from core.security import get_password_hash
 
 async def seed_db():
     async with AsyncSessionLocal() as db:
+        # Check if Admin User already exists
+        query = select(User).where(User.email == "admin@example.com")
+        result = await db.execute(query)
+        existing_admin = result.scalar_one_or_none()
+
+        if existing_admin:
+            print("Admin user already exists. Elevating to Super Admin...")
+            existing_admin.is_super_admin = True
+            await db.commit()
+            print("✅ Admin user successfully elevated to Super Admin.")
+            return
+
         # Create a Demo Tenant
         tenant_id = uuid4()
         demo_tenant = Tenant(id=tenant_id, name="PlumbSide Demo Corp")
