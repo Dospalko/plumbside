@@ -49,6 +49,7 @@ class UserBase(BaseModel):
     email: EmailStr
     full_name: str
     role: UserRole = UserRole.TECHNICIAN
+    is_super_admin: bool = False
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
