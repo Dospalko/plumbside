@@ -26,6 +26,7 @@ class Tenant(Base):
     __tablename__ = "tenants"
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String, nullable=False)
+    notifications_enabled: Mapped[bool] = mapped_column(default=True, server_default="true", nullable=False)
     
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

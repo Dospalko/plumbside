@@ -40,6 +40,7 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -57,6 +58,9 @@ export default function SettingsPage() {
         setFullName(u.full_name);
         setEmail(u.email);
         setCompanyName(t.name);
+        if (t.notifications_enabled !== undefined) {
+          setNotificationsEnabled(t.notifications_enabled);
+        }
       } catch (err) {
         console.error("Failed to load settings", err);
       } finally {
@@ -91,7 +95,7 @@ export default function SettingsPage() {
     setSavingTenant(true);
     setSuccessMsg("");
     try {
-      const updated = await updateTenant(token, { name: companyName });
+      const updated = await updateTenant(token, { name: companyName, notifications_enabled: notificationsEnabled });
       setTenant(updated);
       showSuccess("Firemné údaje uložené.");
     } catch (err: any) {
@@ -231,6 +235,31 @@ export default function SettingsPage() {
                       className="w-full h-10 border border-slate-200 rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-900 font-medium transition-all"
                     />
                     <p className="text-xs text-slate-500 mt-1">Tento názov sa bude zobrazovať vašim zákazníkom a na dokladoch.</p>
+                  </div>
+
+                  <div className="space-y-3 pt-4 border-t border-slate-100 mt-6">
+                    <h3 className="text-sm font-semibold text-slate-900">Komunikácia so zákazníkmi</h3>
+                    <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg border border-slate-100">
+                      <div className="space-y-0.5">
+                        <label className="text-sm font-medium text-slate-900">Automatické SMS / E-maily</label>
+                        <p className="text-xs text-slate-500">
+                          Posielať zákazníkom automatickú notifikáciu "Inštalatér je na ceste", keď zmeníte stav zákazky na "Prebieha".
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={notificationsEnabled}
+                        onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
+                          notificationsEnabled ? 'bg-blue-600' : 'bg-slate-200'
+                        }`}
+                      >
+                        <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          notificationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex justify-end pt-2">

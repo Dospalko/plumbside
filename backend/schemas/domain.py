@@ -38,9 +38,11 @@ class AuditResponse(BaseModel):
 # -----------------
 class TenantResponse(AuditResponse):
     name: str
+    notifications_enabled: bool
 
 class TenantUpdate(BaseModel):
     name: Optional[str] = None
+    notifications_enabled: Optional[bool] = None
 
 # -----------------
 # USERS

@@ -362,11 +362,16 @@ export default function JobDetailPage() {
                       <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
                         <MessageSquare className="w-4 h-4" />
                       </div>
-                      <div className="flex-1 bg-slate-50 rounded-lg rounded-tl-none p-3 border border-slate-100">
-                        <p className="text-sm text-slate-700 whitespace-pre-wrap">{msg.content}</p>
-                        <p className="text-[10px] font-medium text-slate-400 mt-2">
-                          {new Date(msg.created_at).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" })}
-                        </p>
+                      <div className={`flex-1 rounded-lg rounded-tl-none p-3 border ${msg.channel === 'sms' || msg.channel === 'email' ? 'bg-blue-50/50 border-blue-100' : 'bg-slate-50 border-slate-100'}`}>
+                        <div className="flex justify-between items-start mb-1.5">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider ${msg.channel === 'sms' || msg.channel === 'email' ? 'text-blue-600' : 'text-slate-400'}`}>
+                            {msg.channel === 'sms' ? 'SMS Odoslaná' : msg.channel === 'email' ? 'E-mail Odoslaný' : 'Interná Poznámka'}
+                          </span>
+                          <span className="text-[10px] font-medium text-slate-400">
+                            {new Date(msg.created_at).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" })}
+                          </span>
+                        </div>
+                        <p className={`text-sm whitespace-pre-wrap ${msg.channel === 'sms' || msg.channel === 'email' ? 'text-blue-900 font-medium' : 'text-slate-700'}`}>{msg.content}</p>
                       </div>
                     </div>
                   ))

@@ -37,6 +37,9 @@ async def update_my_tenant(
     if data.name is not None:
         tenant.name = data.name
 
+    if data.notifications_enabled is not None:
+        tenant.notifications_enabled = data.notifications_enabled
+
     await db.commit()
     await db.refresh(tenant)
     return tenant

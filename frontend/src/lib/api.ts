@@ -66,6 +66,7 @@ export interface UserProfile {
 export interface TenantProfile {
   id: string;
   name: string;
+  notifications_enabled: boolean;
   created_at: string;
 }
 
@@ -81,7 +82,7 @@ export function getTenant(token: string) {
   return api<TenantProfile>("/api/v1/tenants/me", { token });
 }
 
-export function updateTenant(token: string, data: { name: string }) {
+export function updateTenant(token: string, data: { name?: string; notifications_enabled?: boolean }) {
   return api<TenantProfile>("/api/v1/tenants/me", { method: "PATCH", token, body: JSON.stringify(data) });
 }
 
