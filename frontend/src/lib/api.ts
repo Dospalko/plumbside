@@ -60,6 +60,7 @@ export interface UserProfile {
   full_name: string;
   role: string;
   created_at: string;
+  is_super_admin: boolean;
 }
 
 export interface TenantProfile {
@@ -211,4 +212,24 @@ export async function aiIntake(token: string, text?: string, file?: File): Promi
   }
 
   return res.json();
+}
+
+// --- Super Admin ---
+export interface AdminTenantList {
+  id: string;
+  name: string;
+  created_at: string;
+  user_count: number;
+}
+
+export function getAdminTenants(token: string) {
+  return api<AdminTenantList[]>("/api/v1/admin/tenants", { token });
+}
+
+export function createAdminTenant(token: string, data: { company_name: string; admin_email: string; admin_name: string; admin_password: string }) {
+  return api<{ tenant_id: string; message: string }>("/api/v1/admin/tenants", {
+    method: "POST",
+    token,
+    body: JSON.stringify(data),
+  });
 }

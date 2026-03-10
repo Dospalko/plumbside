@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wrench, Users, Calendar, Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { Wrench, Users, Calendar, Settings, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { getUser, UserProfile } from "@/lib/api";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -14,8 +16,15 @@ const NAV_ITEMS = [
 ];
 
 export function Sidebar() {
-  const { logout } = useAuth();
+  const { logout, token, isAuthenticated, isLoaded } = useAuth();
   const pathname = usePathname();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    if (isLoaded && isAuthenticated && token) {
+      getUser(token).then(setUserProfile).catch(console.error);
+    }
+  }, [isLoaded, isAuthenticated, token]);
 
   return (
     <div className="flex h-full w-64 shrink-0 flex-col bg-slate-900 text-slate-100 px-4 py-8 shadow-xl relative z-20">
@@ -55,6 +64,21 @@ export function Sidebar() {
       </nav>
 
       <div className="mt-auto flex flex-col gap-1.5 pt-6 border-t border-slate-800">
+        {userProfile?.is_super_admin && (
+          <Link href="/admin" className="w-full mb-2">
+            <button
+              className={cn(
+                "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
+                pathname.startsWith("/admin") 
+                  ? "bg-red-600 text-white shadow-sm" 
+                  : "text-red-400 hover:bg-red-500/10 hover:text-red-300"
+              )}
+            >
+              <ShieldCheck className={cn("h-5 w-5", pathname.startsWith("/admin") ? "text-white" : "text-red-400")} />
+              Platform Admin
+            </button>
+          </Link>
+        )}
         <Link href="/dashboard/settings" className="w-full">
           <button
             className={cn(
