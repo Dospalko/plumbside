@@ -16,7 +16,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "https://plumbside.me",
-        "https://www.plumbside.me"
+        "https://www.plumbside.me",
+        "https://plumbside-64d207b6d2d8.herokuapp.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
