@@ -19,6 +19,7 @@ app.add_middleware(
         "https://www.plumbside.me",
         "https://plumbside-64d207b6d2d8.herokuapp.com"
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
