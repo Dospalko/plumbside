@@ -26,17 +26,19 @@ class UserRole(str, enum.Enum):
     TECHNICIAN = "technician"
 
 # Base response structure with audit fields
-class AuditResponse(BaseModel):
+class BaseResponse(BaseModel):
     id: UUID
-    tenant_id: UUID
     created_at: datetime
     updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
+class AuditResponse(BaseResponse):
+    tenant_id: UUID
+
 # -----------------
 # TENANTS
 # -----------------
-class TenantResponse(AuditResponse):
+class TenantResponse(BaseResponse):
     name: str
     notifications_enabled: bool
 
