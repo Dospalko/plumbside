@@ -1,0 +1,40 @@
+# Environments
+.env
+.env.*
+!.env.example
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Node / Frontend
+node_modules/
+.pnp
+.pnp.js
+.next/
+out/
+build/
+dist/
+coverage/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Tools
+.vercel/
+.turbo/
