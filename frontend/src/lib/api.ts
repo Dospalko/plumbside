@@ -86,6 +86,14 @@ export function updateTenant(token: string, data: { name?: string; notifications
   return api<TenantProfile>("/api/v1/tenants/me", { method: "PATCH", token, body: JSON.stringify(data) });
 }
 
+export function getUsers(token: string) {
+  return api<UserProfile[]>("/api/v1/users", { token });
+}
+
+export function createUser(token: string, data: { email: string, full_name: string, role: string, password: string, is_super_admin: boolean }) {
+  return api<UserProfile>("/api/v1/users", { method: "POST", token, body: JSON.stringify(data) });
+}
+
 // --- Jobs ---
 export interface Message {
   id: string;
