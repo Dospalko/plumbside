@@ -1,5 +1,6 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNav } from "@/components/layout/TopNav";
+import { RoleGuard } from "@/components/auth/RoleGuard";
 
 export default function DashboardLayout({
   children,
@@ -8,6 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden font-sans text-slate-900">
+      <RoleGuard />
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <TopNav />
