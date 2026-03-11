@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro, Printer } from "lucide-react";
 import Link from "next/link";
 
 const STATUSES = ["new", "quoted", "scheduled", "in_progress", "done", "cancelled"];
@@ -179,7 +179,7 @@ export default function JobDetailPage() {
             Založené {new Date(job.created_at).toLocaleDateString("sk-SK")}
           </p>
         </div>
-        <div className="mt-8 md:mt-12">
+        <div className="mt-8 md:mt-12 flex items-center gap-3">
           <Badge className={`px-4 py-1.5 text-sm font-semibold rounded-full ${
             job.status === "new" ? "bg-blue-100 text-blue-700" :
             job.status === "in_progress" ? "bg-amber-100 text-amber-700" :
@@ -188,6 +188,12 @@ export default function JobDetailPage() {
           }`}>
             {STATUS_LABELS[job.status] || job.status}
           </Badge>
+          
+          <Link href={`/dashboard/jobs/${job.id}/print`} target="_blank">
+            <button className="h-8 px-3 flex items-center gap-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition-colors shadow-sm">
+               <Printer className="w-3.5 h-3.5" /> Servisný List
+            </button>
+          </Link>
         </div>
       </div>
 
