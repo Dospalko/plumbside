@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import resend
 from uuid import UUID
@@ -55,7 +56,8 @@ class NotificationService:
                         "subject": f"[{tenant.name}] Inštalatér je na ceste",
                         "text": message_content
                     }
-                    email_response = resend.Emails.send(r_params)
+                    loop = asyncio.get_event_loop()
+                    email_response = await loop.run_in_executor(None, resend.Emails.send, r_params)
                     logger.info(f"Resend sent successfully: {email_response}")
                     
                 else:
