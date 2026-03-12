@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Wrench, CheckCircle2, Mic, ClipboardList, Calendar, Users, Zap, ShieldCheck, PlayCircle } from "lucide-react";
+import { ArrowRight, Wrench, CheckCircle2, Mic, ClipboardList, Calendar, Users, Zap } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function LandingPage() {
@@ -15,8 +15,6 @@ export default function LandingPage() {
     "inline-flex items-center justify-center gap-2 h-12 rounded-md border-2 border-foreground px-6 font-black uppercase tracking-wide transition-all";
   const buttonPrimary =
     `${buttonBase} bg-primary text-foreground shadow-[3px_3px_0px_#1a1919] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1a1919]`;
-  const buttonSecondary =
-    `${buttonBase} bg-white text-foreground shadow-[3px_3px_0px_#1a1919] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1a1919]`;
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF9F6] font-sans overflow-x-hidden selection:bg-primary selection:text-white">
@@ -78,29 +76,9 @@ export default function LandingPage() {
               Kompletný operačný systém pre inštalatérov, elektrikárov a lokálne servisy. Zahoďte papiere. Zvýšte výkon.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-start sm:items-center">
-              <Link href="/login" className="w-full sm:w-auto">
-                <button className={`${buttonPrimary} w-full sm:w-auto px-8`}>
-                  ZAČAŤ HNEĎ <ArrowRight className="w-6 h-6 stroke-[3]" />
-                </button>
-              </Link>
-              <a href="#demo" className="w-full sm:w-auto">
-                <button className={`${buttonSecondary} w-full sm:w-auto px-8`}>
-                  60s Demo <PlayCircle className="w-5 h-5" />
-                </button>
-              </a>
-            </div>
-
-            <div className="mt-5 inline-flex items-center gap-2 border-[2px] border-foreground bg-white px-3 py-2 shadow-[2px_2px_0px_#1a1919]">
-              <ShieldCheck className="h-4 w-4 text-primary" />
-              <span className="font-heading text-xs font-bold uppercase tracking-wide text-foreground">
-                TLS zabezpecenie, role-based pristupy, tenant izolacia
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 font-heading text-sm text-foreground/70 font-bold uppercase self-center sm:self-auto mt-4 sm:mt-0">
+            <div className="mt-2 flex items-center gap-2 font-heading text-sm text-foreground/70 font-bold uppercase">
               <Zap className="h-5 w-5 text-primary" />
-              <span>Bez inštalácie</span>
+              <span>Rychly start pre servisny tim</span>
             </div>
           </div>
 
