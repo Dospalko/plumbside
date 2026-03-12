@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Wrench, CheckCircle2, Mic, ClipboardList, Calendar, Users, Zap } from "lucide-react";
+import { ArrowRight, Wrench, CheckCircle2, Mic, ClipboardList, Calendar, Users, Zap, ShieldCheck, PlayCircle } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function LandingPage() {
@@ -70,22 +70,51 @@ export default function LandingPage() {
               Kompletný operačný systém pre inštalatérov, elektrikárov a lokálne servisy. Zahoďte papiere. Zvýšte výkon.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <Link href="/login" className="w-full sm:w-auto">
                 <button className="w-full h-16 px-10 bg-primary text-foreground font-black text-xl uppercase tracking-wider border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] hover:shadow-[2px_2px_0px_#1a1919] hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-3">
                   ZAČAŤ HNEĎ <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </Link>
-              <div className="flex items-center gap-2 font-heading text-sm text-foreground/70 font-bold uppercase self-center sm:self-auto mt-4 sm:mt-0">
-                <Zap className="h-5 w-5 text-primary" />
-                <span>Bez inštalácie</span>
-              </div>
+              <a href="#demo" className="w-full sm:w-auto">
+                <button className="w-full h-16 px-8 bg-white text-foreground font-black text-base uppercase tracking-wider border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] hover:shadow-[2px_2px_0px_#1a1919] hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-3">
+                  60s Demo <PlayCircle className="w-5 h-5" />
+                </button>
+              </a>
+            </div>
+
+            <div className="mt-5 inline-flex items-center gap-2 border-[2px] border-foreground bg-white px-3 py-2 shadow-[2px_2px_0px_#1a1919]">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="font-heading text-xs font-bold uppercase tracking-wide text-foreground">
+                TLS zabezpecenie, role-based pristupy, tenant izolacia
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 font-heading text-sm text-foreground/70 font-bold uppercase self-center sm:self-auto mt-4 sm:mt-0">
+              <Zap className="h-5 w-5 text-primary" />
+              <span>Bez inštalácie</span>
             </div>
           </div>
 
           {/* Hero Visual (Demo Component) */}
-          <div className="flex-1 w-full">
+          <div id="demo" className="flex-1 w-full">
             <HeroDemo />
+          </div>
+        </section>
+
+        <section className="px-6 max-w-[1400px] mx-auto -mt-6 mb-16">
+          <div className="w-full bg-white border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] p-4 md:p-6">
+            <p className="font-heading text-[11px] md:text-xs font-black uppercase tracking-widest text-foreground/70 mb-3">
+              Overene v dennej prevadzke
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
+              {TRUST_ITEMS.map((item) => (
+                <div key={item.label} className="border-[2px] border-foreground bg-[#FAF9F6] px-4 py-3">
+                  <p className="text-2xl md:text-3xl font-black text-primary leading-none">{item.value}</p>
+                  <p className="mt-2 text-xs font-bold uppercase tracking-wide text-foreground/80">{item.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -110,7 +139,7 @@ export default function LandingPage() {
         </div>
 
         {/* Features Section Container */}
-        <section className="py-32 px-6 max-w-[1400px] mx-auto">
+        <section id="moduly" className="py-32 px-6 max-w-[1400px] mx-auto">
           <div className="mb-20 max-w-3xl">
             <h2 className="text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-6">
               MODULY<br/>SYSTÉMU
@@ -132,6 +161,26 @@ export default function LandingPage() {
                 <h3 className="text-2xl font-black uppercase tracking-tight text-foreground mb-4">{feature.title}</h3>
                 <p className="font-sans font-medium text-sm text-foreground/70 leading-relaxed flex-1">{feature.description}</p>
               </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="faq" className="pb-28 px-6 max-w-[1400px] mx-auto">
+          <div className="mb-12 max-w-3xl">
+            <h2 className="text-[2.5rem] md:text-[4rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-4">
+              FAQ
+            </h2>
+            <p className="font-sans font-medium text-lg text-foreground/70 border-l-[2px] border-foreground pl-4">
+              Najcastejsie otazky pred spustenim do ostrej prevadzky.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {FAQ_ITEMS.map((item) => (
+              <article key={item.question} className="bg-white border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] p-6">
+                <h3 className="text-xl font-black uppercase tracking-tight text-foreground mb-3">{item.question}</h3>
+                <p className="font-sans text-sm font-medium text-foreground/75 leading-relaxed">{item.answer}</p>
+              </article>
             ))}
           </div>
         </section>
@@ -193,6 +242,45 @@ const FEATURES = [
     description: "Aplikácia reaguje okamžite bez otravného načítavania. Moderná architektúra šetrí váš čas pri každom kliknutí.",
     icon: Zap,
   }
+];
+
+const TRUST_ITEMS = [
+  { value: "< 2 min", label: "Od hlasovky po zalozenu zakazku" },
+  { value: "7 dni", label: "Typicky onboarding maleho timu" },
+  { value: "24/7", label: "Pristup z mobilu aj desktopu" },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "Ako rychlo to vieme nasadit?",
+    answer:
+      "Pri beznom servise dokazete mat zakazky, kalendar a CRM pripravene v horizonte par dni. Zaciname importom kontaktov a jednoduchym workflow.",
+  },
+  {
+    question: "Potrebujeme nieco instalovat?",
+    answer:
+      "Nie. Platforma bezi v prehliadaci. Technikom staci telefon, kancelarii desktop. Prihlasenie je centralne a roly riadia pristupy.",
+  },
+  {
+    question: "Co je s bezpecnostou dat?",
+    answer:
+      "Pouzivame HTTPS, tenant izolaciu a role-based pristupy. Kazda firma vidi iba svoje data a citlive operacie su kontrolovane na serveri.",
+  },
+  {
+    question: "Vieme importovat existujucich zakaznikov?",
+    answer:
+      "Ano, cez CSV import. Dostanete sablonu stlpcov name, phone, email, address, notes a system importuje validne riadky aj s reportom chyb.",
+  },
+  {
+    question: "Je to vhodne aj pre mensi tim?",
+    answer:
+      "Presne na to je to navrhnute. Procesy su jednoduche, bez enterprise balastu, no stale mate poriadok v zakazkach, terminoch a komunikacii.",
+  },
+  {
+    question: "Ako prebieha podpora po spusteni?",
+    answer:
+      "Po nasadeni doladime workflow podla realnej prevadzky a vratime sa k metrikam vykonu. Ciel je menej chaosu a rychlejsi cashflow.",
+  },
 ];
 
 function HeroDemo() {
