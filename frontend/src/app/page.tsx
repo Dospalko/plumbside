@@ -9,6 +9,14 @@ export default function LandingPage() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
+  const containerClass = "mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8";
+  const sectionClass = "py-16 md:py-20";
+  const buttonBase =
+    "inline-flex items-center justify-center gap-2 h-12 rounded-md border-2 border-foreground px-6 font-black uppercase tracking-wide transition-all";
+  const buttonPrimary =
+    `${buttonBase} bg-primary text-foreground shadow-[3px_3px_0px_#1a1919] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1a1919]`;
+  const buttonSecondary =
+    `${buttonBase} bg-white text-foreground shadow-[3px_3px_0px_#1a1919] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#1a1919]`;
 
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF9F6] font-sans overflow-x-hidden selection:bg-primary selection:text-white">
@@ -18,7 +26,7 @@ export default function LandingPage() {
 
       {/* Navigation - Industrial Nav */}
       <header className="fixed top-0 z-40 w-full border-b-[3px] border-foreground bg-[#FAF9F6]">
-        <div className="flex h-16 items-center justify-between px-6 max-w-[1400px] mx-auto">
+        <div className={`flex h-16 items-center justify-between ${containerClass}`}>
           <div className="flex items-center gap-3">
             <div className="relative flex h-10 w-10 items-center justify-center bg-primary border-[2px] border-foreground shadow-[2px_2px_0px_#1a1919]">
               <Wrench className="h-5 w-5 text-foreground stroke-[2.5]" />
@@ -32,7 +40,7 @@ export default function LandingPage() {
               </span>
             </Link>
             <Link href="/login">
-              <button className="bg-primary hover:bg-orange-600 text-foreground font-black uppercase tracking-wider border-[2px] border-foreground shadow-[3px_3px_0px_#1a1919] hover:shadow-[1px_1px_0px_#1a1919] hover:translate-x-[2px] hover:translate-y-[2px] transition-all px-6 py-2">
+              <button className={`${buttonPrimary} h-10 px-4 text-xs`}>
                 Spustiť Systém
               </button>
             </Link>
@@ -51,7 +59,7 @@ export default function LandingPage() {
         <motion.div style={{ y: y2 }} className="absolute -right-10 top-96 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full -z-10 hidden lg:block" />
 
         {/* Hero Section */}
-        <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-32 px-6 max-w-[1400px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <section className={`${sectionClass} relative pt-20 md:pt-24 ${containerClass} flex flex-col lg:flex-row items-center gap-10 lg:gap-14`}>
           
           {/* Hero Content */}
           <div className="flex-1 w-full max-w-2xl">
@@ -70,14 +78,14 @@ export default function LandingPage() {
               Kompletný operačný systém pre inštalatérov, elektrikárov a lokálne servisy. Zahoďte papiere. Zvýšte výkon.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-start sm:items-center">
               <Link href="/login" className="w-full sm:w-auto">
-                <button className="w-full h-16 px-10 bg-primary text-foreground font-black text-xl uppercase tracking-wider border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] hover:shadow-[2px_2px_0px_#1a1919] hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-3">
+                <button className={`${buttonPrimary} w-full sm:w-auto px-8`}>
                   ZAČAŤ HNEĎ <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </Link>
               <a href="#demo" className="w-full sm:w-auto">
-                <button className="w-full h-16 px-8 bg-white text-foreground font-black text-base uppercase tracking-wider border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] hover:shadow-[2px_2px_0px_#1a1919] hover:translate-x-[4px] hover:translate-y-[4px] transition-all flex items-center justify-center gap-3">
+                <button className={`${buttonSecondary} w-full sm:w-auto px-8`}>
                   60s Demo <PlayCircle className="w-5 h-5" />
                 </button>
               </a>
@@ -102,14 +110,14 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="px-6 max-w-[1400px] mx-auto -mt-6 mb-16">
-          <div className="w-full bg-white border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] p-4 md:p-6">
+        <section className={`${containerClass} -mt-2 mb-12 md:mb-16`}>
+          <div className="w-full bg-white border-[2px] border-foreground shadow-[4px_4px_0px_#1a1919] p-6">
             <p className="font-heading text-[11px] md:text-xs font-black uppercase tracking-widest text-foreground/70 mb-3">
               Overene v dennej prevadzke
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {TRUST_ITEMS.map((item) => (
-                <div key={item.label} className="border-[2px] border-foreground bg-[#FAF9F6] px-4 py-3">
+                <div key={item.label} className="border-[2px] border-foreground bg-[#FAF9F6] px-4 py-4">
                   <p className="text-2xl md:text-3xl font-black text-primary leading-none">{item.value}</p>
                   <p className="mt-2 text-xs font-bold uppercase tracking-wide text-foreground/80">{item.label}</p>
                 </div>
@@ -139,7 +147,7 @@ export default function LandingPage() {
         </div>
 
         {/* Features Section Container */}
-        <section id="moduly" className="py-32 px-6 max-w-[1400px] mx-auto">
+        <section id="moduly" className={`${sectionClass} ${containerClass}`}>
           <div className="mb-20 max-w-3xl">
             <h2 className="text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-6">
               MODULY<br/>SYSTÉMU
@@ -149,23 +157,23 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {FEATURES.map((feature, idx) => (
-              <div key={idx} className="group flex flex-col p-8 bg-white border-[3px] border-foreground shadow-[8px_8px_0px_#1a1919] hover:shadow-[4px_4px_0px_#primary] hover:-translate-y-1 transition-all">
-                <div className="flex justify-between items-start mb-10">
+              <div key={idx} className="group flex flex-col p-6 bg-white border-[2px] border-foreground shadow-[4px_4px_0px_#1a1919] hover:shadow-[3px_3px_0px_#1a1919] hover:-translate-y-0.5 transition-all">
+                <div className="flex justify-between items-start mb-7">
                   <div className="h-16 w-16 bg-[#FAF9F6] border-[2px] border-foreground flex items-center justify-center shadow-[4px_4px_0px_#1a1919] group-hover:bg-primary transition-colors">
                     <feature.icon className="h-8 w-8 text-foreground stroke-[2]" />
                   </div>
                   <span className="font-heading text-2xl font-black text-foreground/20">0{idx + 1}</span>
                 </div>
-                <h3 className="text-2xl font-black uppercase tracking-tight text-foreground mb-4">{feature.title}</h3>
+                <h3 className="text-2xl font-black uppercase tracking-tight text-foreground mb-3">{feature.title}</h3>
                 <p className="font-sans font-medium text-sm text-foreground/70 leading-relaxed flex-1">{feature.description}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section id="faq" className="pb-28 px-6 max-w-[1400px] mx-auto">
+        <section id="faq" className={`pb-20 md:pb-24 ${containerClass}`}>
           <div className="mb-12 max-w-3xl">
             <h2 className="text-[2.5rem] md:text-[4rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-4">
               FAQ
@@ -177,7 +185,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {FAQ_ITEMS.map((item) => (
-              <article key={item.question} className="bg-white border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] p-6">
+              <article key={item.question} className="bg-white border-[2px] border-foreground shadow-[4px_4px_0px_#1a1919] p-6">
                 <h3 className="text-xl font-black uppercase tracking-tight text-foreground mb-3">{item.question}</h3>
                 <p className="font-sans text-sm font-medium text-foreground/75 leading-relaxed">{item.answer}</p>
               </article>
@@ -187,8 +195,8 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t-[3px] border-foreground bg-foreground text-[#FAF9F6] py-16 px-6">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+      <footer className="border-t-[3px] border-foreground bg-foreground text-[#FAF9F6] py-14">
+        <div className={`${containerClass} flex flex-col md:flex-row justify-between items-start md:items-end gap-10`}>
           <div className="space-y-6 max-w-sm">
             <div className="flex items-center gap-3">
               <div className="relative flex h-12 w-12 items-center justify-center bg-primary border-[2px] border-[#FAF9F6]">
@@ -209,9 +217,9 @@ export default function LandingPage() {
       </footer>
 
       {/* Sticky mobile CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t-[3px] border-foreground bg-[#FAF9F6] p-3 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t-[2px] border-foreground bg-[#FAF9F6] p-3 md:hidden">
         <Link href="/login" className="block w-full">
-          <button className="w-full h-12 bg-primary text-foreground font-black text-sm uppercase tracking-wide border-[2px] border-foreground shadow-[3px_3px_0px_#1a1919] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#1a1919] transition-all flex items-center justify-center gap-2">
+          <button className={`${buttonPrimary} w-full text-sm`}>
             Spustit System <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </Link>
