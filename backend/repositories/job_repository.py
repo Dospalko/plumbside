@@ -63,3 +63,13 @@ class JobRepository:
         await self.db.commit()
         await self.db.refresh(job)
         return job
+
+    async def delete(self, job_id: UUID, tenant_id: UUID) -> bool:
+        """Delete a job."""
+        job = await self.get_by_id(job_id, tenant_id)
+        if not job:
+            return False
+            
+        await self.db.delete(job)
+        await self.db.commit()
+        return True

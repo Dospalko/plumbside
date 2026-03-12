@@ -58,3 +58,6 @@ class JobService:
                 await self.repo.db.commit() # Commit the new messages
         
         return JobResponse.model_validate(job)
+
+    async def delete_job(self, job_id: UUID, tenant_id: UUID) -> bool:
+        return await self.repo.delete(job_id, tenant_id)

@@ -70,3 +70,14 @@ async def get_super_admin_user(current_user = Depends(get_current_user)):
             detail="Nemáte administrátorské oprávnenia pre túto akciu."
         )
     return current_user
+
+async def get_owner_user(current_user = Depends(get_current_user)):
+    """
+    Verifies that the current user has the owner role.
+    """
+    if current_user.role != "owner":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Túto akciu môže vykonať iba majiteľ (owner)."
+        )
+    return current_user

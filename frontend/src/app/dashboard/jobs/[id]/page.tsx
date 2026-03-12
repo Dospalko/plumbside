@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter, useParams } from "next/navigation";
-import { getJob, patchJob, getCustomers, Job, Customer, createMessage, createAppointment } from "@/lib/api";
+import { getJob, patchJob, getCustomers, Job, Customer, createMessage, createAppointment, deleteJob } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro, Printer } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro, Printer, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 const STATUSES = ["new", "quoted", "scheduled", "in_progress", "done", "cancelled"];
@@ -27,6 +27,7 @@ export default function JobDetailPage() {
   const [job, setJob] = useState<Job | null>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deletingJob, setDeletingJob] = useState(false);
 
   // Phase 4 states
   const [newMessage, setNewMessage] = useState("");
@@ -71,9 +72,21 @@ export default function JobDetailPage() {
   const handleStatusChange = async (newStatus: string) => {
     if (!token || !job) return;
     const updated = await patchJob(token, job.id, { status: newStatus });
-    // Keep existing messages/appointments from local state since patchJob might not return them eager loaded based on backend config, or just reload job.
     const reloaded = await getJob(token, job.id);
     setJob(reloaded);
+  };
+
+  const handleDeleteJob = async () => {
+    if (!confirm("Ste si istí, že chcete túto zákazku vymazať? Tento krok nie je možné vrátiť späť.")) return;
+    if (!token || !job) return;
+    setDeletingJob(true);
+    try {
+      await deleteJob(token, job.id);
+      router.push("/dashboard/jobs");
+    } catch (err) {
+      alert("Nepodarilo sa vymazať zákazku.");
+      setDeletingJob(false);
+    }
   };
 
   const handleUpdateDetails = async (type: 'desc' | 'price' | 'title' | 'urgency') => {
@@ -179,7 +192,7 @@ export default function JobDetailPage() {
             Založené {new Date(job.created_at).toLocaleDateString("sk-SK")}
           </p>
         </div>
-        <div className="mt-8 md:mt-12 flex items-center gap-3">
+        <div className="mt-8 md:mt-12 flex flex-wrap items-center gap-3">
           <Badge className={`px-4 py-1.5 text-sm font-semibold rounded-full ${
             job.status === "new" ? "bg-blue-100 text-blue-700" :
             job.status === "in_progress" ? "bg-amber-100 text-amber-700" :
@@ -194,6 +207,15 @@ export default function JobDetailPage() {
                <Printer className="w-3.5 h-3.5" /> Servisný List
             </button>
           </Link>
+
+          <button 
+            onClick={handleDeleteJob}
+            disabled={deletingJob}
+            className="h-8 px-3 flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 text-sm font-medium transition-colors shadow-sm disabled:opacity-50"
+            title="Vymazať zákazku"
+          >
+             <Trash2 className="w-3.5 h-3.5" /> Vymazať
+          </button>
         </div>
       </div>
 

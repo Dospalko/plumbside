@@ -81,3 +81,31 @@ async def create_tenant_user(
     await db.commit()
     await db.refresh(new_user)
     return new_user
+
+from core.dependencies import get_owner_user
+from fastapi import status
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_tenant_user(
+    user_id: UUID,
+    tenant_id: UUID = Depends(get_current_tenant_id),
+    db: AsyncSession = Depends(get_db),
+    owner_user: User = Depends(get_owner_user)
+):
+    """
+    Delete a user from the tenant (Owner only).
+    Cannot delete yourself.
+    """
+    if str(user_id) == str(owner_user.id):
+        raise HTTPException(status_code=400, detail="Nemôžete vymazať vlastný účet.")
+
+    query = select(User).where(User.id == user_id, User.tenant_id == tenant_id)
+    result = await db.execute(query)
+    user_to_delete = result.scalar_one_or_none()
+
+    if not user_to_delete:
+        raise HTTPException(status_code=404, detail="Používateľ sa nenašiel.")
+
+    await db.delete(user_to_delete)
+    await db.commit()
+    return None

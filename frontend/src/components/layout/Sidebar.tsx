@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { href: "/dashboard/calendar", label: "Kalendár", icon: Calendar },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onClose }: { onClose?: () => void }) {
   const { logout, token, isAuthenticated, isLoaded } = useAuth();
   const pathname = usePathname();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -46,7 +46,7 @@ export function Sidebar() {
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;
           return (
-            <Link key={item.href} href={item.href} className="w-full">
+            <Link key={item.href} href={item.href} className="w-full" onClick={onClose}>
               <button
                 className={cn(
                   "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
@@ -65,7 +65,7 @@ export function Sidebar() {
 
       <div className="mt-auto flex flex-col gap-1.5 pt-6 border-t border-slate-800">
         {userProfile?.is_super_admin && (
-          <Link href="/admin" className="w-full mb-2">
+          <Link href="/admin" className="w-full mb-2" onClick={onClose}>
             <button
               className={cn(
                 "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
@@ -79,7 +79,7 @@ export function Sidebar() {
             </button>
           </Link>
         )}
-        <Link href="/dashboard/settings" className="w-full">
+        <Link href="/dashboard/settings" className="w-full" onClick={onClose}>
           <button
             className={cn(
               "w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200",
@@ -94,7 +94,10 @@ export function Sidebar() {
         </Link>
         <button
           className="w-full flex items-center justify-start gap-3 h-11 px-3 rounded-lg font-medium text-sm transition-all duration-200 text-slate-400 hover:bg-red-500/10 hover:text-red-400"
-          onClick={logout}
+          onClick={() => {
+            if (onClose) onClose();
+            logout();
+          }}
         >
           <LogOut className="h-5 w-5 text-slate-500 group-hover:text-red-400" />
           Odhlásiť sa

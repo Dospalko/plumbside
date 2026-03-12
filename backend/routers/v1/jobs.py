@@ -75,6 +75,18 @@ async def update_job(
         raise HTTPException(status_code=404, detail="Job not found")
     return job
 
+@router.delete("/{job_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_job(
+    job_id: UUID,
+    tenant_id: UUID = Depends(get_current_tenant_id),
+    service: JobService = Depends(get_job_service)
+):
+    """Delete a job and its associated appointments and messages."""
+    success = await service.delete_job(job_id, tenant_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return None
+
 @router.post("/{job_id}/messages", response_model=MessageResponse, status_code=status.HTTP_201_CREATED)
 async def create_message(
     job_id: UUID,

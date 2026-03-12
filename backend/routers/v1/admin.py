@@ -94,3 +94,23 @@ async def create_new_tenant(
         tenant_id=new_tenant.id,
         message=f"Firma '{data.company_name}' a účet '{data.admin_email}' boli úspešne vytvorené."
     )
+
+@router.delete("/tenants/{tenant_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_tenant(
+    tenant_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    admin_user: User = Depends(get_super_admin_user)
+):
+    """
+    SUPER ADMIN ONLY: Delete a tenant. Cascades to users, jobs, customers via DB constraints.
+    """
+    query = select(Tenant).where(Tenant.id == tenant_id)
+    result = await db.execute(query)
+    tenant = result.scalar_one_or_none()
+    
+    if not tenant:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+        
+    await db.delete(tenant)
+    await db.commit()
+    return None

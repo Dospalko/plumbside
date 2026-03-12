@@ -94,6 +94,10 @@ export function createUser(token: string, data: { email: string, full_name: stri
   return api<UserProfile>("/api/v1/users", { method: "POST", token, body: JSON.stringify(data) });
 }
 
+export function deleteUser(token: string, userId: string) {
+  return api<{}>("/api/v1/users/" + userId, { method: "DELETE", token });
+}
+
 // --- Jobs ---
 export interface Message {
   id: string;
@@ -155,6 +159,10 @@ export function patchJob(token: string, jobId: string, data: Partial<Job>) {
   return api<Job>(`/api/v1/jobs/${jobId}`, { method: "PATCH", token, body: JSON.stringify(data) });
 }
 
+export function deleteJob(token: string, jobId: string) {
+  return api<{}>(`/api/v1/jobs/${jobId}`, { method: "DELETE", token });
+}
+
 export function createMessage(token: string, jobId: string, data: { channel?: string; direction?: string; content: string }) {
   return api<Message>(`/api/v1/jobs/${jobId}/messages`, {
     method: "POST",
@@ -190,6 +198,10 @@ export function getCustomers(token: string) {
 
 export function createCustomer(token: string, data: { name: string; phone?: string; email?: string; address?: string }) {
   return api<Customer>("/api/v1/customers", { method: "POST", token, body: JSON.stringify(data) });
+}
+
+export function getCustomer(token: string, customerId: string) {
+  return api<Customer>(`/api/v1/customers/${customerId}`, { token });
 }
 
 // --- AI Intake ---
@@ -241,4 +253,8 @@ export function createAdminTenant(token: string, data: { company_name: string; a
     token,
     body: JSON.stringify(data),
   });
+}
+
+export function deleteAdminTenant(token: string, tenantId: string) {
+  return api<{}>("/api/v1/admin/tenants/" + tenantId, { method: "DELETE", token });
 }

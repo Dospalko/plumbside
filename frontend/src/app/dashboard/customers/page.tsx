@@ -7,6 +7,7 @@ import { getCustomers, createCustomer, Customer } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Search, Users, Phone, Mail, MapPin } from "lucide-react";
+import Link from "next/link";
 
 export default function CustomersPage() {
   const { token, isAuthenticated, isLoaded } = useAuth();
@@ -119,13 +120,13 @@ export default function CustomersPage() {
           ) : (
             <div className="divide-y divide-slate-100">
               {filteredCustomers.map((customer) => (
-                <div key={customer.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 hover:bg-slate-50/80 transition-colors gap-4 group">
+                <Link key={customer.id} href={`/dashboard/customers/${customer.id}`} className="flex flex-col sm:flex-row sm:items-center justify-between p-6 hover:bg-slate-50/80 transition-colors gap-4 group">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-5">
                     <div className="h-12 w-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100 shadow-sm">
                       <Users className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-lg font-bold text-slate-900">{customer.name}</p>
+                      <p className="text-lg font-bold text-slate-900 group-hover:text-blue-700 transition-colors">{customer.name}</p>
                       <div className="flex flex-wrap items-center gap-4 mt-1.5 text-xs font-semibold text-slate-500">
                         {customer.phone && (
                           <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{customer.phone}</span>
@@ -141,7 +142,7 @@ export default function CustomersPage() {
                       <MapPin className="h-4 w-4 text-slate-400" />{customer.address}
                     </div>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           )}

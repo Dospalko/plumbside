@@ -1,9 +1,17 @@
-import { Bell } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
 
-export function TopNav() {
+export function TopNav({ onMenuClick }: { onMenuClick?: () => void }) {
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 lg:px-8 z-20 sticky top-0 shadow-sm">
       <div className="flex items-center gap-4">
+        {onMenuClick && (
+          <button 
+            onClick={onMenuClick}
+            className="lg:hidden h-10 w-10 flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors -ml-2"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+        )}
         {/* Placeholder for future page titles */}
       </div>
       <div className="flex items-center gap-4">

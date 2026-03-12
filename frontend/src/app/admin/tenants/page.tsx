@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
-import { getAdminTenants, createAdminTenant, AdminTenantList } from "@/lib/api";
+import { getAdminTenants, createAdminTenant, deleteAdminTenant, AdminTenantList } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Building2, Plus, Loader2, CheckCircle2 } from "lucide-react";
+import { Building2, Plus, Loader2, CheckCircle2, Trash2 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 
 const container: Variants = {
@@ -28,6 +28,7 @@ export default function AdminTenantsPage() {
   const [tenants, setTenants] = useState<AdminTenantList[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [deletingTenantId, setDeletingTenantId] = useState<string | null>(null);
   
   // Form state
   const [companyName, setCompanyName] = useState("");
@@ -86,6 +87,22 @@ export default function AdminTenantsPage() {
       setError(err.message || "Nepodarilo sa vytvoriť firmu");
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleDeleteTenant = async (tenantId: string, name: string) => {
+    if (!confirm(`Naozaj chcete natrvalo vymazať firmu "${name}" a všetky jej dáta? Túto akciu nie je možné vrátiť.`)) return;
+    if (!token) return;
+    setDeletingTenantId(tenantId);
+    try {
+      await deleteAdminTenant(token, tenantId);
+      setTenants(tenants.filter(t => t.id !== tenantId));
+      setSuccessMsg(`Firma ${name} bola úspešne vymazaná.`);
+      setTimeout(() => setSuccessMsg(""), 5000);
+    } catch (err: any) {
+      alert("Chyba: " + (err.message || "Nepodarilo sa vymazať firmu"));
+    } finally {
+      setDeletingTenantId(null);
     }
   };
 
@@ -215,7 +232,7 @@ export default function AdminTenantsPage() {
                 <tr>
                   <th className="px-6 py-4 font-semibold">Zákazník (Firma)</th>
                   <th className="px-6 py-4 font-semibold">Vytvorené</th>
-                  <th className="px-6 py-4 font-semibold">Počet účtov (Zamestnancov)</th>
+                  <th className="px-6 py-4 font-semibold">Počet účtov</th>
                   <th className="px-6 py-4 font-semibold text-right">Akcie</th>
                 </tr>
               </thead>
@@ -232,8 +249,14 @@ export default function AdminTenantsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {/* Placeholder for future actions like Suspend/Delete */}
-                      <span className="text-xs font-medium text-slate-400">Aktívne</span>
+                      <button 
+                        onClick={() => handleDeleteTenant(t.id, t.name)}
+                        disabled={deletingTenantId === t.id}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+                        title="Vymazať firmu"
+                      >
+                        {deletingTenantId === t.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                      </button>
                     </td>
                   </tr>
                 ))}
