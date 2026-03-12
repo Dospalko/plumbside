@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { getUser } from "@/lib/api";
@@ -14,6 +14,7 @@ export default function AdminLayout({
 }) {
   const { token, isLoaded, isAuthenticated } = useAuth();
   const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -24,11 +25,19 @@ export default function AdminLayout({
     getUser(token).then((user) => {
       if (!user.is_super_admin) {
         router.replace("/dashboard");
+      } else {
+        setAuthorized(true);
       }
     }).catch(() => router.replace("/login"));
   }, [token, isLoaded, isAuthenticated, router]);
 
-  if (!isLoaded || !isAuthenticated) return null;
+  if (!isLoaded || !isAuthenticated || !authorized) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
+        <div className="text-slate-500 font-medium">Overujem prístup...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden font-sans text-slate-900">
