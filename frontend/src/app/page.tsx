@@ -58,14 +58,14 @@ export default function LandingPage() {
         <motion.div style={{ y: y2 }} className="absolute -right-10 top-96 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full -z-10 hidden lg:block" />
 
         {/* Hero Section */}
-        <section className={`relative ${containerClass} min-h-[calc(100vh-4rem)] flex items-center py-10 md:py-14`}>
+        <section className="relative min-h-[calc(100vh-4rem)] py-10 md:py-14">
           <div className="absolute inset-0 pointer-events-none -z-10">
             <div className="absolute left-0 top-20 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
             <div className="absolute right-10 bottom-16 h-64 w-64 rounded-full bg-foreground/10 blur-3xl" />
           </div>
 
-          <div className="grid w-full gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div className="max-w-2xl">
+          <div className={`${containerClass} mb-8 md:mb-10`}>
+            <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 border-2 border-foreground bg-white px-3 py-1 mb-6 shadow-[2px_2px_0px_#1a1919]">
                 <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                 <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-foreground">AI OPERACNY MODUL</span>
@@ -97,14 +97,16 @@ export default function LandingPage() {
                 <span>Bez instalacie. Funguje v prehliadaci.</span>
               </div>
             </div>
+          </div>
 
-            <div id="demo" className="w-full">
+          <div id="demo" className="w-full px-0 md:px-6 lg:px-10 xl:px-14">
+            <div className="mx-auto w-full max-w-[1600px]">
               <HeroDemo />
             </div>
           </div>
         </section>
 
-        <section className={`${containerClass} -mt-2 mb-12 md:mb-16`}>
+        <section className={`${containerClass} mt-2 mb-12 md:mb-16`}>
           <div className="w-full bg-white border-[2px] border-foreground shadow-[4px_4px_0px_#1a1919] p-6">
             <p className="font-heading text-[11px] md:text-xs font-black uppercase tracking-widest text-foreground/70 mb-3">
               Overene v dennej prevadzke
