@@ -123,8 +123,7 @@ export default function SettingsPage() {
         email: newUserEmail,
         full_name: newUserName,
         password: newUserPassword,
-        role: newUserRole,
-        is_super_admin: false
+        role: newUserRole
       });
       setTeam([created, ...team]);
       setShowNewUserForm(false);

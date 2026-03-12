@@ -4,7 +4,7 @@ from sqlalchemy import select
 from uuid import UUID
 
 from core.database import get_db
-from core.dependencies import get_current_user_id, get_current_tenant_id
+from core.dependencies import get_current_user_id, get_current_tenant_id, get_owner_user
 from core.security import get_password_hash
 from models.domain import User
 from schemas.domain import UserResponse, UserUpdate
@@ -61,7 +61,8 @@ from schemas.domain import UserCreate
 async def create_tenant_user(
     data: UserCreate,
     tenant_id: UUID = Depends(get_current_tenant_id),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    owner_user: User = Depends(get_owner_user)
 ):
     # Check if email exists
     query = select(User).where(User.email == data.email)
@@ -74,15 +75,13 @@ async def create_tenant_user(
         email=data.email,
         full_name=data.full_name,
         role=data.role,
-        is_super_admin=data.is_super_admin,
+        is_super_admin=False,
         hashed_password=get_password_hash(data.password)
     )
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
     return new_user
-
-from core.dependencies import get_owner_user
 from fastapi import status
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)

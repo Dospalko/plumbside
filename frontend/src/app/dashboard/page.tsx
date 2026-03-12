@@ -46,7 +46,12 @@ export default function DashboardPage() {
   const newJobs = jobs.filter((j) => j.status === "new").length;
   const inProgress = jobs.filter((j) => j.status === "in_progress").length;
   const done = jobs.filter((j) => j.status === "done").length;
-  const revenue = jobs.reduce((sum, j) => sum + (j.final_price || j.estimated_price || 0), 0);
+  const expectedRevenue = jobs
+    .filter((j) => j.status !== "done" && j.status !== "cancelled")
+    .reduce((sum, j) => sum + (j.estimated_price || 0), 0);
+  const actualRevenue = jobs
+    .filter((j) => j.status === "done")
+    .reduce((sum, j) => sum + (j.final_price || 0), 0);
 
   // --- Data processing for charts ---
   
@@ -108,12 +113,13 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Main KPI Stats */}
-      <motion.div variants={container} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <motion.div variants={container} className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         {[
           { title: "Nové zákazky", value: newJobs, icon: Briefcase, color: "text-blue-600", bg: "bg-blue-100" },
           { title: "Práve Prebieha", value: inProgress, icon: Clock, color: "text-amber-600", bg: "bg-amber-100" },
           { title: "Dokončené", value: done, icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-100" },
-          { title: "Očakávaný Príjem", value: `€${revenue.toFixed(0)}`, icon: DollarSign, color: "text-purple-600", bg: "bg-purple-100" },
+          { title: "Očakávaný Príjem", value: `€${expectedRevenue.toFixed(0)}`, icon: DollarSign, color: "text-violet-600", bg: "bg-violet-100" },
+          { title: "Skutočný Príjem", value: `€${actualRevenue.toFixed(0)}`, icon: DollarSign, color: "text-emerald-600", bg: "bg-emerald-100" },
         ].map((stat, i) => (
           <motion.div variants={item} key={i}>
             <Card className="rounded-xl border border-slate-200/60 shadow-sm bg-white overflow-hidden transition-all hover:shadow-md">
@@ -139,7 +145,7 @@ export default function DashboardPage() {
               <CardTitle className="text-lg font-semibold text-slate-900">Prívod Zákaziek</CardTitle>
               <CardDescription>Počet zaznamenaných zákaziek za posledných 12 dní.</CardDescription>
             </CardHeader>
-            <CardContent className="p-6 flex-1 min-h-[300px]">
+            <CardContent className="p-6 flex-1 min-h-75">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={barData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -162,7 +168,7 @@ export default function DashboardPage() {
               <CardTitle className="text-lg font-semibold text-slate-900">Rozdelenie Zákaziek</CardTitle>
               <CardDescription>Pomer aktuálnych zákaziek na základe ich stavu.</CardDescription>
             </CardHeader>
-            <CardContent className="p-6 flex-1 min-h-[300px] flex justify-center items-center">
+            <CardContent className="p-6 flex-1 min-h-75 flex justify-center items-center">
               {donutData.length === 0 ? (
                 <p className="text-slate-400 text-sm">Zatiaľ nemáte dáta o zákazkách.</p>
               ) : (

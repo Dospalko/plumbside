@@ -90,12 +90,12 @@ export function getUsers(token: string) {
   return api<UserProfile[]>("/api/v1/users", { token });
 }
 
-export function createUser(token: string, data: { email: string, full_name: string, role: string, password: string, is_super_admin: boolean }) {
+export function createUser(token: string, data: { email: string; full_name: string; role: string; password: string }) {
   return api<UserProfile>("/api/v1/users", { method: "POST", token, body: JSON.stringify(data) });
 }
 
 export function deleteUser(token: string, userId: string) {
-  return api<{}>("/api/v1/users/" + userId, { method: "DELETE", token });
+  return api<unknown>("/api/v1/users/" + userId, { method: "DELETE", token });
 }
 
 // --- Jobs ---
@@ -160,7 +160,7 @@ export function patchJob(token: string, jobId: string, data: Partial<Job>) {
 }
 
 export function deleteJob(token: string, jobId: string) {
-  return api<{}>(`/api/v1/jobs/${jobId}`, { method: "DELETE", token });
+  return api<unknown>(`/api/v1/jobs/${jobId}`, { method: "DELETE", token });
 }
 
 export function createMessage(token: string, jobId: string, data: { channel?: string; direction?: string; content: string }) {
@@ -256,5 +256,5 @@ export function createAdminTenant(token: string, data: { company_name: string; a
 }
 
 export function deleteAdminTenant(token: string, tenantId: string) {
-  return api<{}>("/api/v1/admin/tenants/" + tenantId, { method: "DELETE", token });
+  return api<unknown>("/api/v1/admin/tenants/" + tenantId, { method: "DELETE", token });
 }

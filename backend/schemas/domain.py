@@ -63,7 +63,10 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase, AuditResponse):
     pass
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    email: EmailStr
+    full_name: str
+    role: UserRole = UserRole.TECHNICIAN
     password: str
 
 # -----------------
