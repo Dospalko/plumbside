@@ -64,8 +64,9 @@ export default function LandingPage() {
             <div className="absolute right-10 bottom-16 h-64 w-64 rounded-full bg-foreground/10 blur-3xl" />
           </div>
 
-          <div className={`${containerClass} mb-8 md:mb-10`}>
-            <div className="max-w-3xl">
+          <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
+            <div className="grid w-full items-center gap-8 md:grid-cols-[minmax(320px,560px)_1fr]">
+              <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 border-2 border-foreground bg-white px-3 py-1 mb-6 shadow-[2px_2px_0px_#1a1919]">
                 <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                 <span className="font-heading text-[11px] font-bold uppercase tracking-widest text-foreground">AI OPERACNY MODUL</span>
@@ -96,12 +97,11 @@ export default function LandingPage() {
                 <Zap className="h-4 w-4 text-primary" />
                 <span>Bez instalacie. Funguje v prehliadaci.</span>
               </div>
-            </div>
-          </div>
+              </div>
 
-          <div id="demo" className="w-full px-0 md:px-6 lg:px-10 xl:px-14">
-            <div className="mx-auto w-full max-w-[1600px]">
-              <HeroDemo />
+              <div id="demo" className="w-full">
+                <HeroDemo />
+              </div>
             </div>
           </div>
         </section>
