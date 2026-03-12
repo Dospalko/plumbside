@@ -7,6 +7,7 @@ import { getCustomers, createCustomer, Customer } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Search, Users, Phone, Mail, MapPin } from "lucide-react";
+import { ImportCustomersDialog } from "@/components/customers/ImportCustomersDialog";
 import Link from "next/link";
 
 export default function CustomersPage() {
@@ -59,7 +60,9 @@ export default function CustomersPage() {
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Databáza Klientov</h2>
           <p className="font-medium text-sm text-slate-500 mt-2">Prístup ku klientským dátam a kontaktom</p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <div className="flex gap-3">
+          <ImportCustomersDialog onImportComplete={fetchCustomers} />
+          <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <button className="flex items-center gap-2 bg-blue-600 text-white font-semibold rounded-lg px-5 py-2.5 shadow-sm hover:bg-blue-700 transition-colors">
               <Plus className="h-4 w-4" /> Nový Záznam
@@ -97,6 +100,7 @@ export default function CustomersPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="rounded-xl border border-slate-200 shadow-sm bg-white flex flex-col overflow-hidden">
