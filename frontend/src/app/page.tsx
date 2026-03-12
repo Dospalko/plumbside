@@ -207,6 +207,15 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t-[3px] border-foreground bg-[#FAF9F6] p-3 md:hidden">
+        <Link href="/login" className="block w-full">
+          <button className="w-full h-12 bg-primary text-foreground font-black text-sm uppercase tracking-wide border-[2px] border-foreground shadow-[3px_3px_0px_#1a1919] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#1a1919] transition-all flex items-center justify-center gap-2">
+            Spustit System <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }
