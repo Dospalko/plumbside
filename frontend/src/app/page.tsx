@@ -11,6 +11,7 @@ export default function LandingPage() {
   const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
   const containerClass = "mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8";
   const sectionClass = "py-16 md:py-20";
+  const sectionHeadingClass = "text-4xl md:text-6xl font-black uppercase tracking-tight leading-[0.95] text-foreground";
   const buttonBase =
     "inline-flex items-center justify-center gap-2 h-12 rounded-md border-2 border-foreground px-6 font-black uppercase tracking-wide transition-all";
   const buttonPrimary =
@@ -22,7 +23,7 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col bg-[#FAF9F6] font-sans overflow-x-hidden selection:bg-primary selection:text-white">
       
       {/* Aggressive Grid Background overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-50 mix-blend-multiply" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+      <div className="fixed inset-0 pointer-events-none opacity-[0.015] z-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
 
       {/* Navigation - Industrial Nav */}
       <header className="fixed top-0 z-40 w-full border-b-[3px] border-foreground bg-[#FAF9F6]">
@@ -48,7 +49,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="flex-1 pt-16 relative">
+      <main className="flex-1 pt-16 relative pb-20 md:pb-0">
         {/* Floating background industrial elements */}
         <motion.div style={{ y: y1 }} className="absolute -left-20 top-40 w-64 h-64 border-[1px] border-foreground/10 rounded-full flex items-center justify-center -z-10 hidden lg:flex">
           <div className="w-48 h-48 border-[1px] border-foreground/10 rounded-full flex items-center justify-center">
@@ -68,13 +69,13 @@ export default function LandingPage() {
               <span className="font-heading text-xs font-bold uppercase tracking-widest text-foreground">AI_PROCESOR_AKTÍVNY</span>
             </div>
             
-            <h1 className="text-[3.5rem] leading-[1.0] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter text-foreground mb-8">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl leading-[0.95] font-black uppercase tracking-tight text-foreground mb-6">
               ZÁKAZKY<br/>
               <span className="text-primary [-webkit-text-stroke:2px_#1a1919] text-transparent drop-shadow-[4px_4px_0px_#1a1919]">POD</span><br/>
               KONTROLOU.
             </h1>
 
-            <p className="font-sans font-medium text-base md:text-lg text-foreground/80 mb-10 max-w-lg border-l-[4px] border-primary pl-4">
+            <p className="font-sans font-medium text-base md:text-lg text-foreground/80 mb-8 max-w-xl border-l-[4px] border-primary pl-4">
               Kompletný operačný systém pre inštalatérov, elektrikárov a lokálne servisy. Zahoďte papiere. Zvýšte výkon.
             </p>
 
@@ -148,8 +149,8 @@ export default function LandingPage() {
 
         {/* Features Section Container */}
         <section id="moduly" className={`${sectionClass} ${containerClass}`}>
-          <div className="mb-20 max-w-3xl">
-            <h2 className="text-[3rem] md:text-[5rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-6">
+          <div className="mb-12 max-w-3xl">
+            <h2 className={`${sectionHeadingClass} mb-5`}>
               MODULY<br/>SYSTÉMU
             </h2>
             <p className="font-sans font-medium text-lg text-foreground/70 border-l-[2px] border-foreground pl-4">
@@ -175,7 +176,7 @@ export default function LandingPage() {
 
         <section id="faq" className={`pb-20 md:pb-24 ${containerClass}`}>
           <div className="mb-12 max-w-3xl">
-            <h2 className="text-[2.5rem] md:text-[4rem] font-black uppercase tracking-tighter leading-[1.0] text-foreground mb-4">
+            <h2 className={`${sectionHeadingClass} mb-4`}>
               FAQ
             </h2>
             <p className="font-sans font-medium text-lg text-foreground/70 border-l-[2px] border-foreground pl-4">
@@ -311,14 +312,11 @@ function HeroDemo() {
   }, []);
 
   return (
-    <div className="relative w-full border-[3px] border-foreground bg-white shadow-[12px_12px_0px_#1a1919] p-2 overflow-hidden rotate-[-1deg] hover:rotate-[0deg] transition-all duration-500 origin-bottom-right">
+    <div className="relative w-full border-[2px] border-foreground bg-white shadow-[4px_4px_0px_#1a1919] p-2 overflow-hidden transition-all duration-300">
       <div className="flex flex-col md:flex-row lg:h-[450px] relative">
-        
-        {/* Decorative caution tapes */}
-        <div className="absolute top-0 left-0 w-full h-3 bg-[repeating-linear-gradient(45deg,#1a1919,#1a1919_10px,#FAF9F6_10px,#FAF9F6_20px)] border-b-[2px] border-foreground z-20"></div>
 
         {/* Left: Input Simulation (Voice note) */}
-        <div className="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-foreground p-8 flex flex-col justify-center items-center bg-[#FAF9F6] relative pt-12">
+        <div className="flex-1 border-b-[2px] md:border-b-0 md:border-r-[2px] border-foreground p-8 flex flex-col justify-center items-center bg-[#FAF9F6] relative">
           
           <div className="w-full mb-8">
             <span className="bg-foreground text-white font-heading text-[10px] uppercase font-bold px-3 py-1 tracking-widest">
@@ -328,13 +326,13 @@ function HeroDemo() {
           
           <div className="relative w-full max-w-[320px]">
             {/* Brutalist Voice Bubble */}
-            <motion.div 
+            <motion.div
               animate={{ 
                 scale: step === 0 ? 1 : step === 1 ? 1.05 : 0.95,
                 opacity: step >= 2 ? 0.3 : 1,
                 borderColor: step === 1 ? "var(--primary)" : "var(--foreground)",
               }}
-              className="bg-white p-5 border-[3px] border-foreground shadow-[6px_6px_0px_#1a1919] flex items-center gap-4 w-full"
+              className="bg-white p-5 border-[2px] border-foreground shadow-[3px_3px_0px_#1a1919] flex items-center gap-4 w-full"
             >
               <div className="w-12 h-12 bg-primary flex items-center justify-center text-foreground border-[2px] border-foreground shrink-0">
                 <Mic className="w-6 h-6 stroke-[2.5]" />
@@ -366,7 +364,7 @@ function HeroDemo() {
                 x: step === 1 ? -20 : -10,
                 y: -15
               }}
-              className="absolute -bottom-8 -right-8 bg-primary text-foreground border-[2px] border-foreground font-heading text-[11px] font-black px-4 py-2 shadow-[4px_4px_0px_#1a1919] flex items-center gap-2 uppercase tracking-wide z-10"
+              className="absolute -bottom-6 -right-6 bg-primary text-foreground border-[2px] border-foreground font-heading text-[11px] font-black px-4 py-2 shadow-[3px_3px_0px_#1a1919] flex items-center gap-2 uppercase tracking-wide z-10"
             >
               <Zap className="w-4 h-4" />
               Spracovávam...
@@ -375,7 +373,7 @@ function HeroDemo() {
         </div>
 
         {/* Right: Output Kanban Card */}
-        <div className="flex-1 p-8 flex flex-col justify-center items-center bg-foreground relative pt-12 overflow-hidden">
+        <div className="flex-1 p-8 flex flex-col justify-center items-center bg-foreground relative overflow-hidden">
           <div className="w-full mb-8 text-right">
             <span className="bg-primary text-foreground font-heading text-[10px] uppercase font-bold px-3 py-1 tracking-widest border-[1px] border-primary">
               &gt; CRM VÝSTUP
@@ -392,7 +390,7 @@ function HeroDemo() {
                  rotate: step >= 2 ? 2 : 0,
                }}
                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-               className="bg-white p-6 border-[3px] border-foreground shadow-[8px_8px_0px_#1a1919] w-full"
+              className="bg-white p-6 border-[2px] border-foreground shadow-[4px_4px_0px_#1a1919] w-full"
             >
                <div className="flex justify-between items-start mb-4 border-b-[2px] border-foreground/10 pb-3">
                  <h4 className="font-black text-foreground text-lg uppercase tracking-tight leading-none">Únik Vody<br/>Novákovci</h4>
@@ -419,8 +417,8 @@ function HeroDemo() {
                    <span className="bg-destructive text-white text-[10px] font-black px-2 py-0.5 tracking-wider uppercase">KRITICKÁ</span>
                  </div>
                  
-                 <button className="w-full bg-foreground text-white font-heading text-[10px] uppercase font-bold py-2 hover:bg-primary hover:text-foreground transition-colors mt-2">
-                   ŠTART VÝJAZDU
+                 <button className="w-full h-10 border-2 border-foreground bg-primary text-foreground font-heading text-[10px] uppercase font-bold tracking-wide shadow-[2px_2px_0px_#1a1919] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#1a1919] transition-all mt-2">
+                   Spustit Vyjazd
                  </button>
                </motion.div>
             </motion.div>
