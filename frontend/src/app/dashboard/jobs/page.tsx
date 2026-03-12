@@ -10,6 +10,7 @@ import { motion, Variants } from "framer-motion";
 
 const COLUMNS = [
   { key: "new", label: "Nové", color: "bg-blue-400", txt: "text-foreground", borderHover: "border-blue-400", bgHover: "bg-blue-400/10" },
+  { key: "triaged", label: "Vyhodnotené", color: "bg-violet-400", txt: "text-foreground", borderHover: "border-violet-400", bgHover: "bg-violet-400/10" },
   { key: "quoted", label: "Nacenené", color: "bg-amber-400", txt: "text-foreground", borderHover: "border-amber-400", bgHover: "bg-amber-400/10" },
   { key: "scheduled", label: "Naplánované", color: "bg-purple-400", txt: "text-foreground", borderHover: "border-purple-400", bgHover: "bg-purple-400/10" },
   { key: "in_progress", label: "Prebieha", color: "bg-orange-500", txt: "text-foreground", borderHover: "border-orange-500", bgHover: "bg-orange-500/10" },

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter, useParams } from "next/navigation";
-import { getJob, patchJob, getCustomers, Job, Customer, createMessage, createAppointment, deleteJob } from "@/lib/api";
+import { getJob, patchJob, getCustomer, Job, Customer, createMessage, createAppointment, deleteJob } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Clock, MessageSquare, Send, Calendar, Edit2, Check, X, Euro, Printer, Trash2 } from "lucide-react";
 import Link from "next/link";
 
-const STATUSES = ["new", "quoted", "scheduled", "in_progress", "done", "cancelled"];
+const STATUSES = ["new", "triaged", "quoted", "scheduled", "in_progress", "done", "cancelled"];
 const STATUS_LABELS: Record<string, string> = {
-  new: "Nové", quoted: "Nacenené", scheduled: "Naplánované",
+  new: "Nové", triaged: "Vyhodnotené", quoted: "Nacenené", scheduled: "Naplánované",
   in_progress: "Prebieha", done: "Hotové", cancelled: "Zrušené",
 };
 
@@ -58,8 +58,8 @@ export default function JobDetailPage() {
       try {
         const j = await getJob(token, jobId);
         setJob(j);
-        const customers = await getCustomers(token);
-        setCustomer(customers.find((c) => c.id === j.customer_id) || null);
+        const customerData = await getCustomer(token, j.customer_id);
+        setCustomer(customerData);
       } catch {
         router.push("/dashboard/jobs");
       } finally {
@@ -126,7 +126,7 @@ export default function JobDetailPage() {
     if (!token || !job || !newMessage.trim()) return;
     setIsSubmittingMessage(true);
     try {
-      await createMessage(token, job.id, { content: newMessage, channel: "SYSTEM", direction: "OUTBOUND" });
+      await createMessage(token, job.id, { content: newMessage, channel: "system", direction: "outbound" });
       setNewMessage("");
       const reloaded = await getJob(token, job.id);
       setJob(reloaded);
@@ -195,8 +195,12 @@ export default function JobDetailPage() {
         <div className="mt-8 md:mt-12 flex flex-wrap items-center gap-3">
           <Badge className={`px-4 py-1.5 text-sm font-semibold rounded-full ${
             job.status === "new" ? "bg-blue-100 text-blue-700" :
+            job.status === "triaged" ? "bg-violet-100 text-violet-700" :
+            job.status === "quoted" ? "bg-amber-100 text-amber-700" :
+            job.status === "scheduled" ? "bg-purple-100 text-purple-700" :
             job.status === "in_progress" ? "bg-amber-100 text-amber-700" :
             job.status === "done" ? "bg-emerald-100 text-emerald-700" :
+            job.status === "cancelled" ? "bg-red-100 text-red-700" :
             "bg-slate-100 text-slate-700"
           }`}>
             {STATUS_LABELS[job.status] || job.status}
